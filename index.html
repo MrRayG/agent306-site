@@ -21,7 +21,7 @@
   <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=satoshi@300,400,500,700&display=swap" rel="stylesheet">
   
   <!-- Favicon as inline SVG data URI -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%230f0f0f'/%3E%3Ctext x='16' y='22' font-family='sans-serif' font-weight='700' font-size='14' fill='%232dd4bf' text-anchor='middle'%3E306%3C/text%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%230f0f0f'/%3E%3Ctext x='16' y='22' font-family='sans-serif' font-weight='700' font-size='14' fill='%23f97316' text-anchor='middle'%3E306%3C/text%3E%3C/svg%3E">
 
   <style>
     /* ===== RESET & BASE ===== */
@@ -35,9 +35,9 @@
       --color-text: #e0e0e0;
       --color-text-muted: #8a8a8a;
       --color-text-faint: #555;
-      --color-accent: #2dd4bf;
-      --color-accent-dim: rgba(45, 212, 191, 0.15);
-      --color-accent-glow: rgba(45, 212, 191, 0.08);
+      --color-accent: #f97316;
+      --color-accent-dim: rgba(249, 115, 22, 0.15);
+      --color-accent-glow: rgba(249, 115, 22, 0.08);
 
       --font-display: 'Clash Display', 'Arial Black', sans-serif;
       --font-body: 'Satoshi', 'Inter', sans-serif;
@@ -87,7 +87,7 @@
     }
 
     ::selection {
-      background: rgba(45, 212, 191, 0.25);
+      background: rgba(249, 115, 22, 0.25);
       color: #fff;
     }
 
@@ -120,7 +120,7 @@
       transform: translateX(-50%);
       width: 800px;
       height: 800px;
-      background: radial-gradient(ellipse, rgba(45, 212, 191, 0.04) 0%, transparent 70%);
+      background: radial-gradient(ellipse, rgba(249, 115, 22, 0.04) 0%, transparent 70%);
       animation: ambient-pulse 8s ease-in-out infinite;
     }
 
@@ -160,11 +160,30 @@
     .delay-5 { animation-delay: 0.9s; }
     .delay-6 { animation-delay: 1.1s; }
 
+    /* ===== NFT PIXEL ART ===== */
+    .nft-frame {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: var(--space-6);
+    }
+
+    .nft-pixel-art {
+      width: 160px;
+      height: 160px;
+      image-rendering: pixelated;
+      image-rendering: -moz-crisp-edges;
+      image-rendering: crisp-edges;
+      box-shadow: 0 0 40px 12px rgba(249, 115, 22, 0.15), 0 0 80px 20px rgba(249, 115, 22, 0.05);
+      border: none;
+      /* Sharp corners — no border-radius */
+    }
+
     /* ===== SVG LOGO ===== */
     .logo-mark {
-      width: clamp(56px, 8vw, 88px);
+      width: clamp(44px, 6vw, 64px);
       height: auto;
-      margin-bottom: var(--space-8);
+      margin-top: var(--space-4);
     }
 
     .logo-mark .accent {
@@ -201,7 +220,7 @@
       color: var(--color-accent);
       letter-spacing: 0.02em;
       margin-bottom: var(--space-8);
-      text-shadow: 0 0 40px rgba(45, 212, 191, 0.2);
+      text-shadow: 0 0 40px rgba(249, 115, 22, 0.2);
     }
 
     .separator {
@@ -299,8 +318,8 @@
     }
 
     @keyframes badge-pulse {
-      0%, 100% { opacity: 0.5; box-shadow: 0 0 0 0 rgba(45, 212, 191, 0); }
-      50% { opacity: 1; box-shadow: 0 0 8px 2px rgba(45, 212, 191, 0.3); }
+      0%, 100% { opacity: 0.5; box-shadow: 0 0 0 0 rgba(249, 115, 22, 0); }
+      50% { opacity: 1; box-shadow: 0 0 8px 2px rgba(249, 115, 22, 0.3); }
     }
 
     /* ===== FOOTER ===== */
@@ -336,6 +355,11 @@
       .links {
         gap: var(--space-3);
       }
+
+      .nft-pixel-art {
+        width: 128px;
+        height: 128px;
+      }
     }
 
     /* ===== REDUCED MOTION ===== */
@@ -354,14 +378,17 @@
 </head>
 <body>
 
-  <!-- Ambient teal glow -->
+  <!-- Ambient orange glow -->
   <div class="ambient" aria-hidden="true"></div>
 
   <main class="page">
 
-    <!-- HERO -->
-    <div class="fade-up delay-1">
-      <!-- SVG Logo Mark: Fedora silhouette with 306 -->
+    <!-- NFT PIXEL ART + LOGO -->
+    <div class="fade-up delay-1 nft-frame">
+      <!-- Agent #306 NFT Pixel Art — 40x40 monochrome, rendered crisp at 160px -->
+      <svg class="nft-pixel-art" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" shape-rendering="crispEdges" aria-label="Agent #306 NFT pixel art"><rect width="40" height="40" fill="#0f0f0f"/><rect x="16" y="2" width="8" height="1" fill="#f97316"/><rect x="16" y="3" width="9" height="1" fill="#f97316"/><rect x="14" y="4" width="12" height="1" fill="#f97316"/><rect x="13" y="5" width="15" height="1" fill="#f97316"/><rect x="12" y="6" width="17" height="1" fill="#f97316"/><rect x="11" y="7" width="19" height="1" fill="#f97316"/><rect x="11" y="8" width="19" height="1" fill="#f97316"/><rect x="10" y="9" width="20" height="1" fill="#f97316"/><rect x="9" y="10" width="23" height="1" fill="#f97316"/><rect x="8" y="11" width="10" height="1" fill="#f97316"/><rect x="19" y="11" width="3" height="1" fill="#f97316"/><rect x="25" y="11" width="8" height="1" fill="#f97316"/><rect x="7" y="12" width="8" height="1" fill="#f97316"/><rect x="19" y="12" width="1" height="1" fill="#f97316"/><rect x="21" y="12" width="1" height="1" fill="#f97316"/><rect x="26" y="12" width="7" height="1" fill="#f97316"/><rect x="8" y="13" width="2" height="1" fill="#f97316"/><rect x="16" y="13" width="1" height="1" fill="#f97316"/><rect x="19" y="13" width="1" height="1" fill="#f97316"/><rect x="21" y="13" width="1" height="1" fill="#f97316"/><rect x="30" y="13" width="3" height="1" fill="#f97316"/><rect x="9" y="14" width="1" height="1" fill="#f97316"/><rect x="11" y="14" width="1" height="1" fill="#f97316"/><rect x="15" y="14" width="1" height="1" fill="#f97316"/><rect x="18" y="14" width="3" height="1" fill="#f97316"/><rect x="24" y="14" width="3" height="1" fill="#f97316"/><rect x="9" y="15" width="1" height="1" fill="#f97316"/><rect x="13" y="15" width="3" height="1" fill="#f97316"/><rect x="17" y="15" width="3" height="1" fill="#f97316"/><rect x="22" y="15" width="2" height="1" fill="#f97316"/><rect x="27" y="15" width="2" height="1" fill="#f97316"/><rect x="30" y="15" width="1" height="1" fill="#f97316"/><rect x="10" y="16" width="1" height="1" fill="#f97316"/><rect x="13" y="16" width="2" height="1" fill="#f97316"/><rect x="16" y="16" width="2" height="1" fill="#f97316"/><rect x="23" y="16" width="2" height="1" fill="#f97316"/><rect x="26" y="16" width="2" height="1" fill="#f97316"/><rect x="11" y="17" width="1" height="1" fill="#f97316"/><rect x="13" y="17" width="2" height="1" fill="#f97316"/><rect x="16" y="17" width="2" height="1" fill="#f97316"/><rect x="24" y="17" width="4" height="1" fill="#f97316"/><rect x="29" y="17" width="1" height="1" fill="#f97316"/><rect x="13" y="18" width="1" height="1" fill="#f97316"/><rect x="15" y="18" width="3" height="1" fill="#f97316"/><rect x="23" y="18" width="3" height="1" fill="#f97316"/><rect x="27" y="18" width="1" height="1" fill="#f97316"/><rect x="30" y="18" width="1" height="1" fill="#f97316"/><rect x="10" y="19" width="1" height="1" fill="#f97316"/><rect x="12" y="19" width="2" height="1" fill="#f97316"/><rect x="27" y="19" width="2" height="1" fill="#f97316"/><rect x="13" y="20" width="1" height="1" fill="#f97316"/><rect x="21" y="20" width="1" height="1" fill="#f97316"/><rect x="27" y="20" width="1" height="1" fill="#f97316"/><rect x="11" y="21" width="2" height="1" fill="#f97316"/><rect x="14" y="21" width="1" height="1" fill="#f97316"/><rect x="27" y="21" width="1" height="1" fill="#f97316"/><rect x="29" y="21" width="1" height="1" fill="#f97316"/><rect x="12" y="22" width="1" height="1" fill="#f97316"/><rect x="14" y="22" width="1" height="1" fill="#f97316"/><rect x="28" y="22" width="1" height="1" fill="#f97316"/><rect x="30" y="22" width="1" height="1" fill="#f97316"/><rect x="10" y="23" width="1" height="1" fill="#f97316"/><rect x="12" y="23" width="1" height="1" fill="#f97316"/><rect x="14" y="23" width="1" height="1" fill="#f97316"/><rect x="18" y="23" width="5" height="1" fill="#f97316"/><rect x="26" y="23" width="2" height="1" fill="#f97316"/><rect x="29" y="23" width="2" height="1" fill="#f97316"/><rect x="10" y="24" width="2" height="1" fill="#f97316"/><rect x="13" y="24" width="3" height="1" fill="#f97316"/><rect x="25" y="24" width="2" height="1" fill="#f97316"/><rect x="29" y="24" width="2" height="1" fill="#f97316"/><rect x="11" y="25" width="1" height="1" fill="#f97316"/><rect x="14" y="25" width="4" height="1" fill="#f97316"/><rect x="24" y="25" width="3" height="1" fill="#f97316"/><rect x="29" y="25" width="1" height="1" fill="#f97316"/><rect x="12" y="26" width="2" height="1" fill="#f97316"/><rect x="15" y="26" width="4" height="1" fill="#f97316"/><rect x="22" y="26" width="2" height="1" fill="#f97316"/><rect x="25" y="26" width="1" height="1" fill="#f97316"/><rect x="28" y="26" width="1" height="1" fill="#f97316"/><rect x="13" y="27" width="1" height="1" fill="#f97316"/><rect x="17" y="27" width="7" height="1" fill="#f97316"/><rect x="27" y="27" width="1" height="1" fill="#f97316"/><rect x="14" y="28" width="1" height="1" fill="#f97316"/><rect x="16" y="28" width="9" height="1" fill="#f97316"/><rect x="26" y="28" width="1" height="1" fill="#f97316"/><rect x="17" y="29" width="7" height="1" fill="#f97316"/><rect x="25" y="29" width="1" height="1" fill="#f97316"/><rect x="15" y="30" width="1" height="1" fill="#f97316"/><rect x="22" y="30" width="1" height="1" fill="#f97316"/><rect x="13" y="31" width="3" height="1" fill="#f97316"/><rect x="18" y="31" width="1" height="1" fill="#f97316"/><rect x="25" y="31" width="3" height="1" fill="#f97316"/><rect x="9" y="32" width="8" height="1" fill="#f97316"/><rect x="18" y="32" width="1" height="1" fill="#f97316"/><rect x="24" y="32" width="9" height="1" fill="#f97316"/><rect x="7" y="33" width="1" height="1" fill="#f97316"/><rect x="10" y="33" width="9" height="1" fill="#f97316"/><rect x="22" y="33" width="9" height="1" fill="#f97316"/><rect x="34" y="33" width="1" height="1" fill="#f97316"/><rect x="6" y="34" width="1" height="1" fill="#f97316"/><rect x="8" y="34" width="1" height="1" fill="#f97316"/><rect x="10" y="34" width="21" height="1" fill="#f97316"/><rect x="32" y="34" width="1" height="1" fill="#f97316"/><rect x="35" y="34" width="1" height="1" fill="#f97316"/><rect x="10" y="35" width="21" height="1" fill="#f97316"/><rect x="33" y="35" width="1" height="1" fill="#f97316"/><rect x="35" y="35" width="1" height="1" fill="#f97316"/><rect x="11" y="36" width="19" height="1" fill="#f97316"/><rect x="5" y="37" width="1" height="1" fill="#f97316"/><rect x="11" y="37" width="19" height="1" fill="#f97316"/><rect x="31" y="37" width="1" height="1" fill="#f97316"/><rect x="36" y="37" width="1" height="1" fill="#f97316"/><rect x="5" y="38" width="1" height="1" fill="#f97316"/><rect x="9" y="38" width="22" height="1" fill="#f97316"/><rect x="36" y="38" width="1" height="1" fill="#f97316"/><rect x="5" y="39" width="1" height="1" fill="#f97316"/><rect x="9" y="39" width="22" height="1" fill="#f97316"/><rect x="35" y="39" width="2" height="1" fill="#f97316"/></svg>
+
+      <!-- SVG Logo Mark: Hexagonal frame with 306 — smaller, below NFT -->
       <svg class="logo-mark" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Agent #306 logo">
         <!-- Outer hexagonal frame -->
         <path class="frame" d="M40 4 L72 20 L72 60 L40 76 L8 60 L8 20 Z" stroke-linejoin="round"/>
