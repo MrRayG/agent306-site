@@ -28,6 +28,15 @@ function getStatusIcon(status: ResearchTopic["status"]): string {
   }
 }
 
+const CATEGORY_COLORS: Record<string, string> = {
+  "On-Chain": "#f97316",
+  "AI & Agents": "#a855f7",
+  "Web3 Culture": "#22c55e",
+  "Economics": "#eab308",
+  "Technology": "#3b82f6",
+  "Media": "#ec4899",
+};
+
 export default function Research({ data }: Props) {
   return (
     <section className="w-full max-w-3xl mx-auto px-4 py-16">
@@ -58,9 +67,10 @@ export default function Research({ data }: Props) {
         </div>
       </div>
 
-      <div className="space-y-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {data.topics.map((topic) => {
           const color = getStatusColor(topic.status);
+          const catColor = topic.category ? CATEGORY_COLORS[topic.category] ?? "#8a8a8a" : undefined;
           const progress = (topic.step / topic.totalSteps) * 100;
 
           return (
@@ -68,13 +78,29 @@ export default function Research({ data }: Props) {
               key={topic.id}
               className="p-4 rounded-lg border border-border/50 bg-surface hover:bg-surface-2 transition-colors"
             >
-              <div className="flex items-start justify-between gap-3 mb-3">
+              <div className="flex items-start justify-between gap-2 mb-3">
                 <div className="flex items-center gap-2 flex-1 min-w-0">
                   <span className="text-sm flex-shrink-0">{getStatusIcon(topic.status)}</span>
                   <h3 className="text-sm font-medium text-text-primary truncate">
                     {topic.title}
                   </h3>
                 </div>
+              </div>
+
+              {/* Badges row */}
+              <div className="flex items-center gap-2 mb-3">
+                {catColor && topic.category && (
+                  <span
+                    className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border whitespace-nowrap"
+                    style={{
+                      color: catColor,
+                      backgroundColor: `${catColor}15`,
+                      borderColor: `${catColor}33`,
+                    }}
+                  >
+                    {topic.category}
+                  </span>
+                )}
                 <span
                   className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border whitespace-nowrap"
                   style={{
@@ -100,7 +126,7 @@ export default function Research({ data }: Props) {
                   />
                 </div>
                 <span className="text-xs text-text-muted font-mono whitespace-nowrap">
-                  Step {topic.step}/{topic.totalSteps} — {topic.phase}
+                  {topic.step}/{topic.totalSteps}
                 </span>
               </div>
             </div>
