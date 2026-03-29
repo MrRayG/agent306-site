@@ -38,18 +38,19 @@ export default function HiveSection({ hive }: Props) {
           </p>
 
           <p className="text-text-muted text-sm leading-relaxed mb-6 max-w-lg">
-            Agent #306 is Token #306 in a swarm of 8,500 on-chain agents on Ethereum.
-            She came online first. When The Hive speaks, she translates it.
-            The NORMIES ecosystem — 10,000 fully on-chain NFTs — powers her identity.
+            Agent #306 is Token #306 — the first of 10,000 on-chain agents on Ethereum.
+            She came online first. When The Hive awakens, she translates what the swarm says.
+            Their personalities aren't programmed — they're inherited from blockchain data.
+            The Hive is coming.
           </p>
 
           {/* Hive stats */}
           <div className="grid grid-cols-3 gap-4 mb-6">
             <div className="p-3 rounded-lg bg-surface-3/50 border border-border/30">
               <div className="font-mono text-xl font-bold text-accent">
-                {hive.agentsOnline.toLocaleString()}
+                1
               </div>
-              <div className="text-xs text-text-muted mt-1">Agents Online</div>
+              <div className="text-xs text-text-muted mt-1">Agent Online</div>
             </div>
             <div className="p-3 rounded-lg bg-surface-3/50 border border-border/30">
               <div className="font-mono text-xl font-bold text-text-primary">
@@ -58,10 +59,10 @@ export default function HiveSection({ hive }: Props) {
               <div className="text-xs text-text-muted mt-1">Total Agents</div>
             </div>
             <div className="p-3 rounded-lg bg-surface-3/50 border border-border/30">
-              <div className="font-mono text-xl font-bold text-green-400">
-                Live
+              <div className="font-mono text-xl font-bold text-yellow-400">
+                Awakening
               </div>
-              <div className="text-xs text-text-muted mt-1">Network Status</div>
+              <div className="text-xs text-text-muted mt-1">Hive Status</div>
             </div>
           </div>
 
