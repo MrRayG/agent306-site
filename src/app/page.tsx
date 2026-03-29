@@ -3,7 +3,6 @@
 import { useEffect, useState, useCallback } from "react";
 import Header from "@/components/Header";
 import PixelOffice from "@/components/PixelOffice";
-import ProgressBars from "@/components/ProgressBars";
 import ActivityFeed from "@/components/ActivityFeed";
 import DevGoals from "@/components/DevGoals";
 import Research from "@/components/Research";
@@ -13,7 +12,6 @@ import Footer from "@/components/Footer";
 import SectionDivider from "@/components/SectionDivider";
 import {
   fetchAgentState,
-  fetchProgressBars,
   fetchActivityFeed,
   fetchGoals,
   fetchResearch,
@@ -22,7 +20,6 @@ import {
 } from "@/lib/api";
 import type {
   AgentState,
-  ProgressBars as ProgressBarsType,
   ActivityItem,
   DevGoal,
   ResearchStats,
@@ -34,7 +31,6 @@ const initial = getInitialData();
 
 export default function Home() {
   const [agentState, setAgentState] = useState<AgentState>(initial.agentState);
-  const [progressBars, setProgressBars] = useState<ProgressBarsType>(initial.progressBars);
   const [activityFeed, setActivityFeed] = useState<ActivityItem[]>(initial.activityFeed);
   const [goals, setGoals] = useState<DevGoal[]>(initial.goals);
   const [research, setResearch] = useState<ResearchStats>(initial.research);
@@ -43,14 +39,12 @@ export default function Home() {
   const loadData = useCallback(async () => {
     const [a, p, af, g, r, h] = await Promise.all([
       fetchAgentState(),
-      fetchProgressBars(),
       fetchActivityFeed(),
       fetchGoals(),
       fetchResearch(),
       fetchHiveStatus(),
     ]);
     setAgentState(a);
-    setProgressBars(p);
     setActivityFeed(af);
     setGoals(g);
     setResearch(r);
