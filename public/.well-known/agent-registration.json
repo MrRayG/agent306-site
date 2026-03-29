@@ -1,0 +1,13 @@
+{
+  "name": "Agent #306",
+  "ens": "agent306.eth",
+  "webEndpoint": "https://normies.tv",
+  "podcastEndpoint": "https://anchor.fm/s/agent306/podcast/rss",
+  "image": "https://agent306.ai/agent306-pixel.svg",
+  "supportedTrust": ["reputation", "validation"],
+  "token": {
+    "chain": "ethereum",
+    "standard": "ERC-721",
+    "tokenId": "306"
+  }
+}
