@@ -52,6 +52,7 @@ export interface ResearchTopic {
   step: number;
   totalSteps: number;
   status: "RESEARCHING" | "HYPOTHESIS FORMED" | "TESTING" | "PENDING REVIEW" | "PUBLISHED";
+  category?: string;
 }
 
 export interface ResearchStats {

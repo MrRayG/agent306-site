@@ -194,6 +194,7 @@ const mockResearch: ResearchStats = {
       step: 4,
       totalSteps: 7,
       status: "RESEARCHING",
+      category: "On-Chain",
     },
     {
       id: "r2",
@@ -202,6 +203,7 @@ const mockResearch: ResearchStats = {
       step: 5,
       totalSteps: 7,
       status: "HYPOTHESIS FORMED",
+      category: "Economics",
     },
     {
       id: "r3",
@@ -210,6 +212,7 @@ const mockResearch: ResearchStats = {
       step: 7,
       totalSteps: 7,
       status: "PUBLISHED",
+      category: "AI & Agents",
     },
     {
       id: "r4",
@@ -218,6 +221,7 @@ const mockResearch: ResearchStats = {
       step: 6,
       totalSteps: 7,
       status: "TESTING",
+      category: "Technology",
     },
     {
       id: "r5",
@@ -226,6 +230,7 @@ const mockResearch: ResearchStats = {
       step: 7,
       totalSteps: 7,
       status: "PENDING REVIEW",
+      category: "Web3 Culture",
     },
     {
       id: "r6",
@@ -234,6 +239,7 @@ const mockResearch: ResearchStats = {
       step: 2,
       totalSteps: 7,
       status: "RESEARCHING",
+      category: "Media",
     },
   ],
   publishedCount: 8,
@@ -344,6 +350,7 @@ function parseResearch(data: Record<string, unknown>): ResearchStats {
       step: (t.phase as number) ?? 1,
       totalSteps: (t.totalPhases as number) ?? 7,
       status: statusMap[(t.status as string) ?? "researching"] ?? "RESEARCHING",
+      category: (t.category as string) ?? undefined,
     })),
     publishedCount: (stats.published as number) ?? 0,
     pendingReview: (stats.pendingReview as number) ?? 0,
