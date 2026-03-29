@@ -37,7 +37,7 @@ export default function Home() {
   const [hive, setHive] = useState<HiveStatus>(initial.hive);
 
   const loadData = useCallback(async () => {
-    const [a, p, af, g, r, h] = await Promise.all([
+    const [a, af, g, r, h] = await Promise.all([
       fetchAgentState(),
       fetchActivityFeed(),
       fetchGoals(),
