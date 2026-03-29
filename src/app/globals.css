@@ -105,6 +105,16 @@ body {
   100% { transform: translateX(100%); }
 }
 
+/* Mood pulse animation for cognitive state */
+.mood-pulse {
+  animation: moodPulse 2s ease-in-out infinite;
+}
+
+@keyframes moodPulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 4px rgba(249, 115, 22, 0.4); }
+  50% { opacity: 0.5; box-shadow: 0 0 8px rgba(249, 115, 22, 0.7); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

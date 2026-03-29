@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import Header from "@/components/Header";
 import PixelOffice from "@/components/PixelOffice";
+import CognitiveState from "@/components/CognitiveState";
 import ActivityFeed from "@/components/ActivityFeed";
 import DevGoals from "@/components/DevGoals";
 import Research from "@/components/Research";
@@ -16,6 +17,7 @@ import {
   fetchGoals,
   fetchResearch,
   fetchHiveStatus,
+  fetchCognitiveState,
   getInitialData,
 } from "@/lib/api";
 import type {
@@ -24,6 +26,7 @@ import type {
   DevGoal,
   ResearchStats,
   HiveStatus,
+  CognitiveState as CognitiveStateType,
 } from "@/lib/types";
 
 // Get initial data synchronously so we never show a blank page
@@ -35,20 +38,23 @@ export default function Home() {
   const [goals, setGoals] = useState<DevGoal[]>(initial.goals);
   const [research, setResearch] = useState<ResearchStats>(initial.research);
   const [hive, setHive] = useState<HiveStatus>(initial.hive);
+  const [cognitiveState, setCognitiveState] = useState<CognitiveStateType>(initial.cognitiveState);
 
   const loadData = useCallback(async () => {
-    const [a, af, g, r, h] = await Promise.all([
+    const [a, af, g, r, h, cs] = await Promise.all([
       fetchAgentState(),
       fetchActivityFeed(),
       fetchGoals(),
       fetchResearch(),
       fetchHiveStatus(),
+      fetchCognitiveState(),
     ]);
     setAgentState(a);
     setActivityFeed(af);
     setGoals(g);
     setResearch(r);
     setHive(h);
+    setCognitiveState(cs);
   }, []);
 
   useEffect(() => {
@@ -111,6 +117,13 @@ export default function Home() {
             </p>
           </div>
         </section>
+
+        <SectionDivider />
+
+        {/* The Mind — Cognitive State */}
+        <div id="mind" className="fade-in-section">
+          <CognitiveState data={cognitiveState} />
+        </div>
 
         <SectionDivider />
 
