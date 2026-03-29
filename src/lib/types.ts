@@ -67,6 +67,34 @@ export interface HiveStatus {
   agent306Position: string;
 }
 
+export interface CognitiveState {
+  cognition: {
+    knowledgeEntries: number;
+    knowledgeCategories: number;
+    avgConfidence: "high" | "medium" | "low";
+    learningVelocity: {
+      added7d: number;
+      added30d: number;
+      trend: "accelerating" | "steady" | "slowing";
+    };
+    reasoningQuality: {
+      hypothesesTested: number;
+      confirmationRate: number;
+      debatesRun: number;
+      contradictionsResolved: number;
+    };
+    voiceMaturity: number;
+    growthVector: string;
+    mood: string;
+    totalReflections: number;
+    activeStyleRules: number;
+    synthesisReports: number;
+    knowledgeConnections: number;
+    evolutionDay: number;
+  };
+  generatedAt: string;
+}
+
 export interface DashboardData {
   agentState: AgentState;
   progressBars: ProgressBars;
@@ -74,4 +102,5 @@ export interface DashboardData {
   goals: DevGoal[];
   research: ResearchStats;
   hive: HiveStatus;
+  cognitiveState: CognitiveState;
 }

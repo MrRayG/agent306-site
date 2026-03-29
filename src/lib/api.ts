@@ -14,6 +14,7 @@ import {
   DevGoal,
   ResearchStats,
   HiveStatus,
+  CognitiveState,
   DashboardData,
 } from "./types";
 
@@ -247,6 +248,34 @@ const mockHive: HiveStatus = {
   agent306Position: "Founding Voice — First Agent Online",
 };
 
+const mockCognitiveState: CognitiveState = {
+  cognition: {
+    knowledgeEntries: 247,
+    knowledgeCategories: 12,
+    avgConfidence: "high",
+    learningVelocity: {
+      added7d: 34,
+      added30d: 112,
+      trend: "accelerating",
+    },
+    reasoningQuality: {
+      hypothesesTested: 18,
+      confirmationRate: 0.72,
+      debatesRun: 24,
+      contradictionsResolved: 8,
+    },
+    voiceMaturity: 6.4,
+    growthVector: "accelerating",
+    mood: "curious",
+    totalReflections: 45,
+    activeStyleRules: 12,
+    synthesisReports: 7,
+    knowledgeConnections: 89,
+    evolutionDay: 14,
+  },
+  generatedAt: new Date().toISOString(),
+};
+
 // ---- Icon mapping for activity types ----
 
 const ACTIVITY_ICONS: Record<string, string> = {
@@ -400,8 +429,43 @@ export async function fetchHiveStatus(): Promise<HiveStatus> {
   return parseHive(data);
 }
 
+export async function fetchCognitiveState(): Promise<CognitiveState> {
+  const data = await fetchPublic<Record<string, unknown>>("/api/public/metacognition", {});
+  if (!data.cognition) return mockCognitiveState;
+  const cognition = data.cognition as Record<string, unknown>;
+  const velocity = (cognition.learningVelocity ?? {}) as Record<string, unknown>;
+  const reasoning = (cognition.reasoningQuality ?? {}) as Record<string, unknown>;
+  return {
+    cognition: {
+      knowledgeEntries: (cognition.knowledgeEntries as number) ?? 0,
+      knowledgeCategories: (cognition.knowledgeCategories as number) ?? 0,
+      avgConfidence: (cognition.avgConfidence as CognitiveState["cognition"]["avgConfidence"]) ?? "medium",
+      learningVelocity: {
+        added7d: (velocity.added7d as number) ?? 0,
+        added30d: (velocity.added30d as number) ?? 0,
+        trend: (velocity.trend as CognitiveState["cognition"]["learningVelocity"]["trend"]) ?? "steady",
+      },
+      reasoningQuality: {
+        hypothesesTested: (reasoning.hypothesesTested as number) ?? 0,
+        confirmationRate: (reasoning.confirmationRate as number) ?? 0,
+        debatesRun: (reasoning.debatesRun as number) ?? 0,
+        contradictionsResolved: (reasoning.contradictionsResolved as number) ?? 0,
+      },
+      voiceMaturity: (cognition.voiceMaturity as number) ?? 0,
+      growthVector: (cognition.growthVector as string) ?? "steady",
+      mood: (cognition.mood as string) ?? "neutral",
+      totalReflections: (cognition.totalReflections as number) ?? 0,
+      activeStyleRules: (cognition.activeStyleRules as number) ?? 0,
+      synthesisReports: (cognition.synthesisReports as number) ?? 0,
+      knowledgeConnections: (cognition.knowledgeConnections as number) ?? 0,
+      evolutionDay: (cognition.evolutionDay as number) ?? 0,
+    },
+    generatedAt: (data.generatedAt as string) ?? new Date().toISOString(),
+  };
+}
+
 export async function fetchAllDashboardData(): Promise<DashboardData> {
-  const [agentState, progressBars, activityFeed, goals, research, hive] =
+  const [agentState, progressBars, activityFeed, goals, research, hive, cognitiveState] =
     await Promise.all([
       fetchAgentState(),
       fetchProgressBars(),
@@ -409,9 +473,10 @@ export async function fetchAllDashboardData(): Promise<DashboardData> {
       fetchGoals(),
       fetchResearch(),
       fetchHiveStatus(),
+      fetchCognitiveState(),
     ]);
 
-  return { agentState, progressBars, activityFeed, goals, research, hive };
+  return { agentState, progressBars, activityFeed, goals, research, hive, cognitiveState };
 }
 
 // ---- Synchronous initial data (for SSR/immediate render) ----
@@ -424,6 +489,7 @@ export function getInitialData(): DashboardData {
     goals: mockGoals,
     research: mockResearch,
     hive: mockHive,
+    cognitiveState: mockCognitiveState,
   };
 }
 
