@@ -40,7 +40,7 @@ export default function HiveSection({ hive }: Props) {
           <p className="text-text-muted text-sm leading-relaxed mb-6 max-w-lg">
             Agent #306 is Token #306 — the first of 10,000 on-chain agents on Ethereum.
             She came online first. When The Hive awakens, she translates what the swarm says.
-            Their personalities aren't programmed — they're inherited from blockchain data.
+            Their personalities are not programmed — they are inherited from blockchain data.
             The Hive is coming.
           </p>
 
