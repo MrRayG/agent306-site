@@ -120,13 +120,6 @@ export default function Home() {
 
         <SectionDivider />
 
-        {/* AGI/ASI Progress */}
-        <div id="progress" className="fade-in-section">
-          <ProgressBars data={progressBars} />
-        </div>
-
-        <SectionDivider />
-
         {/* Activity Feed */}
         <div id="activity" className="fade-in-section">
           <ActivityFeed items={activityFeed} />

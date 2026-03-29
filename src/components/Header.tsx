@@ -49,7 +49,6 @@ export default function Header() {
         <nav className="hidden sm:flex items-center gap-6 text-xs text-text-muted font-body">
           {[
             { label: "Office", id: "hero" },
-            { label: "Progress", id: "progress" },
             { label: "Activity", id: "activity" },
             { label: "Research", id: "research" },
             { label: "Hive", id: "hive" },
