@@ -204,15 +204,47 @@ export default function PixelOffice({ status, statusLabel }: Props) {
   const targetPosRef = useRef(STATIONS[statusToStation(status)]);
   const particlesRef = useRef<Particle[]>([]);
   const animFrameRef = useRef(0);
-  const nftImageRef = useRef<HTMLImageElement | null>(null);
+  const nftImageRef = useRef<HTMLCanvasElement | null>(null);
   const nftLoadedRef = useRef(false);
 
-  // Load NFT image on mount
+  // Load NFT image on mount and colorize it
   useEffect(() => {
     const img = new Image();
     img.crossOrigin = "anonymous";
     img.onload = () => {
-      nftImageRef.current = img;
+      // Draw onto offscreen canvas to access pixel data
+      const offscreen = document.createElement("canvas");
+      offscreen.width = img.width;
+      offscreen.height = img.height;
+      const octx = offscreen.getContext("2d");
+      if (!octx) return;
+      octx.drawImage(img, 0, 0);
+
+      const imageData = octx.getImageData(0, 0, img.width, img.height);
+      const data = imageData.data;
+
+      for (let i = 0; i < data.length; i += 4) {
+        const r = data[i];
+        const g = data[i + 1];
+        const b = data[i + 2];
+
+        if (r > 200 && g > 200 && b > 200) {
+          // Light gray background → transparent
+          data[i + 3] = 0;
+        } else if (r < 100) {
+          // Dark gray character pixels → orange with luminance variation
+          // Use original brightness to modulate orange intensity
+          const brightness = (r + g + b) / 3; // ~73 for the dark gray
+          // Map brightness 0–100 → scale factor 0.7–1.0 for depth
+          const scale = 0.7 + (brightness / 100) * 0.3;
+          data[i] = Math.round(249 * scale);     // R
+          data[i + 1] = Math.round(115 * scale); // G
+          data[i + 2] = Math.round(22 * scale);  // B
+        }
+      }
+
+      octx.putImageData(imageData, 0, 0);
+      nftImageRef.current = offscreen;
       nftLoadedRef.current = true;
     };
     img.onerror = () => {
