@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import Header from "@/components/Header";
 import PixelOffice from "@/components/PixelOffice";
 import CognitiveState from "@/components/CognitiveState";
@@ -12,12 +12,7 @@ import Distribution from "@/components/Distribution";
 import Footer from "@/components/Footer";
 import SectionDivider from "@/components/SectionDivider";
 import {
-  fetchAgentState,
-  fetchActivityFeed,
-  fetchGoals,
-  fetchResearch,
-  fetchHiveStatus,
-  fetchCognitiveState,
+  fetchAllDashboardData,
   getInitialData,
 } from "@/lib/api";
 import type {
@@ -40,25 +35,51 @@ export default function Home() {
   const [hive, setHive] = useState<HiveStatus>(initial.hive);
   const [cognitiveState, setCognitiveState] = useState<CognitiveStateType>(initial.cognitiveState);
 
+  // Track which fields have received live data at least once.
+  // Once live, we never overwrite with mock/fallback data ("stale-while-revalidate").
+  const hasLive = useRef({
+    agentState: false,
+    activityFeed: false,
+    goals: false,
+    research: false,
+    hive: false,
+    cognitiveState: false,
+  });
+
   const loadData = useCallback(async () => {
-    const [a, af, g, r, h, cs] = await Promise.all([
-      fetchAgentState(),
-      fetchActivityFeed(),
-      fetchGoals(),
-      fetchResearch(),
-      fetchHiveStatus(),
-      fetchCognitiveState(),
-    ]);
-    setAgentState(a);
-    setActivityFeed(af);
-    setGoals(g);
-    setResearch(r);
-    setHive(h);
-    setCognitiveState(cs);
+    const result = await fetchAllDashboardData();
+
+    // For each field: update state only if the new data is live,
+    // OR if we haven't received live data yet (initial mock → mock is fine).
+    if (result.agentState.isLive || !hasLive.current.agentState) {
+      setAgentState(result.agentState.data);
+      if (result.agentState.isLive) hasLive.current.agentState = true;
+    }
+    if (result.activityFeed.isLive || !hasLive.current.activityFeed) {
+      setActivityFeed(result.activityFeed.data);
+      if (result.activityFeed.isLive) hasLive.current.activityFeed = true;
+    }
+    if (result.goals.isLive || !hasLive.current.goals) {
+      setGoals(result.goals.data);
+      if (result.goals.isLive) hasLive.current.goals = true;
+    }
+    if (result.research.isLive || !hasLive.current.research) {
+      setResearch(result.research.data);
+      if (result.research.isLive) hasLive.current.research = true;
+    }
+    if (result.hive.isLive || !hasLive.current.hive) {
+      setHive(result.hive.data);
+      if (result.hive.isLive) hasLive.current.hive = true;
+    }
+    if (result.cognitiveState.isLive || !hasLive.current.cognitiveState) {
+      setCognitiveState(result.cognitiveState.data);
+      if (result.cognitiveState.isLive) hasLive.current.cognitiveState = true;
+    }
   }, []);
 
   useEffect(() => {
-    // Refresh every 30s
+    // Fetch immediately on mount, then refresh every 30s
+    loadData();
     const interval = setInterval(loadData, 30000);
     return () => clearInterval(interval);
   }, [loadData]);

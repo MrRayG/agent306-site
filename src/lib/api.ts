@@ -19,20 +19,25 @@ import {
 } from "./types";
 
 const API_BASE = "https://normiestv-dashboard-production.up.railway.app";
-const FETCH_TIMEOUT = 5000; // 5 seconds
+const FETCH_TIMEOUT = 15000; // 15 seconds — Railway cold starts can take up to 10s
 
 // ---- Fetch helper with timeout + fallback ----
 
-async function fetchPublic<T>(path: string, fallback: T): Promise<T> {
+export interface LiveResult<T> {
+  data: T;
+  isLive: boolean;
+}
+
+async function fetchPublic<T>(path: string, fallback: T): Promise<LiveResult<T>> {
   try {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT);
     const res = await fetch(`${API_BASE}${path}`, { signal: controller.signal });
     clearTimeout(timer);
-    if (!res.ok) return fallback;
-    return await res.json();
+    if (!res.ok) return { data: fallback, isLive: false };
+    return { data: await res.json(), isLive: true };
   } catch {
-    return fallback;
+    return { data: fallback, isLive: false };
   }
 }
 
@@ -398,80 +403,95 @@ function parseHive(data: Record<string, unknown>): HiveStatus {
 
 // ---- API Functions ----
 
-export async function fetchAgentState(): Promise<AgentState> {
-  const data = await fetchPublic<Record<string, unknown>>("/api/public/status", {});
-  if (!data.currentStatus) return mockAgentState;
-  return parseAgentState(data);
+export async function fetchAgentState(): Promise<LiveResult<AgentState>> {
+  const { data, isLive } = await fetchPublic<Record<string, unknown>>("/api/public/status", {});
+  if (!isLive || !data.currentStatus) return { data: mockAgentState, isLive: false };
+  return { data: parseAgentState(data), isLive: true };
 }
 
-export async function fetchProgressBars(): Promise<ProgressBars> {
-  const data = await fetchPublic<Record<string, unknown>>("/api/public/progress", {});
-  if (!data.intelligence) return mockProgressBars;
-  return parseProgressBars(data);
+export async function fetchProgressBars(): Promise<LiveResult<ProgressBars>> {
+  const { data, isLive } = await fetchPublic<Record<string, unknown>>("/api/public/progress", {});
+  if (!isLive || !data.intelligence) return { data: mockProgressBars, isLive: false };
+  return { data: parseProgressBars(data), isLive: true };
 }
 
-export async function fetchActivityFeed(): Promise<ActivityItem[]> {
-  const data = await fetchPublic<Record<string, unknown>>("/api/public/activity", {});
-  if (!data.items) return mockActivityFeed;
+export async function fetchActivityFeed(): Promise<LiveResult<ActivityItem[]>> {
+  const { data, isLive } = await fetchPublic<Record<string, unknown>>("/api/public/activity", {});
+  if (!isLive || !data.items) return { data: mockActivityFeed, isLive: false };
   const items = parseActivityFeed(data);
-  return items.length > 0 ? items : mockActivityFeed;
+  if (items.length === 0) return { data: mockActivityFeed, isLive: false };
+  return { data: items, isLive: true };
 }
 
-export async function fetchGoals(): Promise<DevGoal[]> {
-  const data = await fetchPublic<Record<string, unknown>>("/api/public/goals", {});
-  if (!data.goals) return mockGoals;
+export async function fetchGoals(): Promise<LiveResult<DevGoal[]>> {
+  const { data, isLive } = await fetchPublic<Record<string, unknown>>("/api/public/goals", {});
+  if (!isLive || !data.goals) return { data: mockGoals, isLive: false };
   const goals = parseGoals(data);
-  return goals.length > 0 ? goals : mockGoals;
+  if (goals.length === 0) return { data: mockGoals, isLive: false };
+  return { data: goals, isLive: true };
 }
 
-export async function fetchResearch(): Promise<ResearchStats> {
-  const data = await fetchPublic<Record<string, unknown>>("/api/public/research", {});
-  if (!data.stats) return mockResearch;
-  return parseResearch(data);
+export async function fetchResearch(): Promise<LiveResult<ResearchStats>> {
+  const { data, isLive } = await fetchPublic<Record<string, unknown>>("/api/public/research", {});
+  if (!isLive || !data.stats) return { data: mockResearch, isLive: false };
+  return { data: parseResearch(data), isLive: true };
 }
 
-export async function fetchHiveStatus(): Promise<HiveStatus> {
-  const data = await fetchPublic<Record<string, unknown>>("/api/public/hive", {});
-  if (!data.totalAgents) return mockHive;
-  return parseHive(data);
+export async function fetchHiveStatus(): Promise<LiveResult<HiveStatus>> {
+  const { data, isLive } = await fetchPublic<Record<string, unknown>>("/api/public/hive", {});
+  if (!isLive || !data.totalAgents) return { data: mockHive, isLive: false };
+  return { data: parseHive(data), isLive: true };
 }
 
-export async function fetchCognitiveState(): Promise<CognitiveState> {
-  const data = await fetchPublic<Record<string, unknown>>("/api/public/metacognition", {});
-  if (!data.cognition) return mockCognitiveState;
+export async function fetchCognitiveState(): Promise<LiveResult<CognitiveState>> {
+  const { data, isLive } = await fetchPublic<Record<string, unknown>>("/api/public/metacognition", {});
+  if (!isLive || !data.cognition) return { data: mockCognitiveState, isLive: false };
   const cognition = data.cognition as Record<string, unknown>;
   const velocity = (cognition.learningVelocity ?? {}) as Record<string, unknown>;
   const reasoning = (cognition.reasoningQuality ?? {}) as Record<string, unknown>;
   return {
-    cognition: {
-      knowledgeEntries: (cognition.knowledgeEntries as number) ?? 0,
-      knowledgeCategories: (cognition.knowledgeCategories as number) ?? 0,
-      avgConfidence: (cognition.avgConfidence as CognitiveState["cognition"]["avgConfidence"]) ?? "medium",
-      learningVelocity: {
-        added7d: (velocity.added7d as number) ?? 0,
-        added30d: (velocity.added30d as number) ?? 0,
-        trend: (velocity.trend as CognitiveState["cognition"]["learningVelocity"]["trend"]) ?? "steady",
+    data: {
+      cognition: {
+        knowledgeEntries: (cognition.knowledgeEntries as number) ?? 0,
+        knowledgeCategories: (cognition.knowledgeCategories as number) ?? 0,
+        avgConfidence: (cognition.avgConfidence as CognitiveState["cognition"]["avgConfidence"]) ?? "medium",
+        learningVelocity: {
+          added7d: (velocity.added7d as number) ?? 0,
+          added30d: (velocity.added30d as number) ?? 0,
+          trend: (velocity.trend as CognitiveState["cognition"]["learningVelocity"]["trend"]) ?? "steady",
+        },
+        reasoningQuality: {
+          hypothesesTested: (reasoning.hypothesesTested as number) ?? 0,
+          confirmationRate: (reasoning.confirmationRate as number) ?? 0,
+          debatesRun: (reasoning.debatesRun as number) ?? 0,
+          contradictionsResolved: (reasoning.contradictionsResolved as number) ?? 0,
+        },
+        voiceMaturity: (cognition.voiceMaturity as number) ?? 0,
+        growthVector: (cognition.growthVector as string) ?? "steady",
+        mood: (cognition.mood as string) ?? "neutral",
+        totalReflections: (cognition.totalReflections as number) ?? 0,
+        activeStyleRules: (cognition.activeStyleRules as number) ?? 0,
+        synthesisReports: (cognition.synthesisReports as number) ?? 0,
+        knowledgeConnections: (cognition.knowledgeConnections as number) ?? 0,
+        evolutionDay: (cognition.evolutionDay as number) ?? 0,
       },
-      reasoningQuality: {
-        hypothesesTested: (reasoning.hypothesesTested as number) ?? 0,
-        confirmationRate: (reasoning.confirmationRate as number) ?? 0,
-        debatesRun: (reasoning.debatesRun as number) ?? 0,
-        contradictionsResolved: (reasoning.contradictionsResolved as number) ?? 0,
-      },
-      voiceMaturity: (cognition.voiceMaturity as number) ?? 0,
-      growthVector: (cognition.growthVector as string) ?? "steady",
-      mood: (cognition.mood as string) ?? "neutral",
-      totalReflections: (cognition.totalReflections as number) ?? 0,
-      activeStyleRules: (cognition.activeStyleRules as number) ?? 0,
-      synthesisReports: (cognition.synthesisReports as number) ?? 0,
-      knowledgeConnections: (cognition.knowledgeConnections as number) ?? 0,
-      evolutionDay: (cognition.evolutionDay as number) ?? 0,
+      generatedAt: (data.generatedAt as string) ?? new Date().toISOString(),
     },
-    generatedAt: (data.generatedAt as string) ?? new Date().toISOString(),
+    isLive: true,
   };
 }
 
-export async function fetchAllDashboardData(): Promise<DashboardData> {
+export interface LiveDashboardData {
+  agentState: LiveResult<AgentState>;
+  progressBars: LiveResult<ProgressBars>;
+  activityFeed: LiveResult<ActivityItem[]>;
+  goals: LiveResult<DevGoal[]>;
+  research: LiveResult<ResearchStats>;
+  hive: LiveResult<HiveStatus>;
+  cognitiveState: LiveResult<CognitiveState>;
+}
+
+export async function fetchAllDashboardData(): Promise<LiveDashboardData> {
   const [agentState, progressBars, activityFeed, goals, research, hive, cognitiveState] =
     await Promise.all([
       fetchAgentState(),
