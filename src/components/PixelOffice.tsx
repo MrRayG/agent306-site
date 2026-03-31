@@ -191,11 +191,6 @@ interface Props {
   statusLabel: string;
 }
 
-const NFT_IMAGE_URL = "https://api.normies.art/normie/306/image.png";
-// Target size in grid cells for the NFT image
-const NFT_WIDTH = 10;
-const NFT_HEIGHT = 14;
-
 export default function PixelOffice({ status, statusLabel }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [dimensions, setDimensions] = useState({ w: WIDTH, h: HEIGHT });
@@ -204,54 +199,6 @@ export default function PixelOffice({ status, statusLabel }: Props) {
   const targetPosRef = useRef(STATIONS[statusToStation(status)]);
   const particlesRef = useRef<Particle[]>([]);
   const animFrameRef = useRef(0);
-  const nftImageRef = useRef<HTMLCanvasElement | null>(null);
-  const nftLoadedRef = useRef(false);
-
-  // Load NFT image on mount and colorize it
-  useEffect(() => {
-    const img = new Image();
-    img.crossOrigin = "anonymous";
-    img.onload = () => {
-      // Draw onto offscreen canvas to access pixel data
-      const offscreen = document.createElement("canvas");
-      offscreen.width = img.width;
-      offscreen.height = img.height;
-      const octx = offscreen.getContext("2d");
-      if (!octx) return;
-      octx.drawImage(img, 0, 0);
-
-      const imageData = octx.getImageData(0, 0, img.width, img.height);
-      const data = imageData.data;
-
-      for (let i = 0; i < data.length; i += 4) {
-        const r = data[i];
-        const g = data[i + 1];
-        const b = data[i + 2];
-
-        if (r > 200 && g > 200 && b > 200) {
-          // Light gray background → transparent
-          data[i + 3] = 0;
-        } else if (r < 100) {
-          // Dark gray character pixels → orange with luminance variation
-          // Use original brightness to modulate orange intensity
-          const brightness = (r + g + b) / 3; // ~73 for the dark gray
-          // Map brightness 0–100 → scale factor 0.7–1.0 for depth
-          const scale = 0.7 + (brightness / 100) * 0.3;
-          data[i] = Math.round(249 * scale);     // R
-          data[i + 1] = Math.round(115 * scale); // G
-          data[i + 2] = Math.round(22 * scale);  // B
-        }
-      }
-
-      octx.putImageData(imageData, 0, 0);
-      nftImageRef.current = offscreen;
-      nftLoadedRef.current = true;
-    };
-    img.onerror = () => {
-      nftLoadedRef.current = false;
-    };
-    img.src = NFT_IMAGE_URL;
-  }, []);
 
   // Update target when status changes
   useEffect(() => {
@@ -583,28 +530,17 @@ export default function PixelOffice({ status, statusLabel }: Props) {
       animState = statusToAnim(status);
     }
 
-    // Draw agent
+    // Draw agent sprite
     const animFrame = Math.floor(frame / 10) % 4;
-    if (nftLoadedRef.current && nftImageRef.current) {
-      // Draw actual Normie #306 NFT pixel art
-      ctx.imageSmoothingEnabled = false;
-      const drawW = NFT_WIDTH * PIXEL;
-      const drawH = NFT_HEIGHT * PIXEL;
-      const drawX = (pos.x - NFT_WIDTH / 2) * PIXEL;
-      const drawY = (pos.y - NFT_HEIGHT + 3) * PIXEL;
-      ctx.drawImage(nftImageRef.current, drawX, drawY, drawW, drawH);
-    } else {
-      // Fallback to hand-drawn sprite
-      const sprite = getAgentSprite(animFrame, animState);
-      for (const [sx, sy, color] of sprite) {
-        ctx.fillStyle = color;
-        ctx.fillRect(
-          (pos.x + sx) * PIXEL,
-          (pos.y + sy) * PIXEL,
-          PIXEL,
-          PIXEL
-        );
-      }
+    const sprite = getAgentSprite(animFrame, animState);
+    for (const [sx, sy, color] of sprite) {
+      ctx.fillStyle = color;
+      ctx.fillRect(
+        (pos.x + sx) * PIXEL,
+        (pos.y + sy) * PIXEL,
+        PIXEL,
+        PIXEL
+      );
     }
 
     // Thought bubble when idle

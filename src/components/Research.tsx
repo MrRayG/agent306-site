@@ -29,9 +29,9 @@ function getStatusIcon(status: ResearchTopic["status"]): string {
 }
 
 const CATEGORY_COLORS: Record<string, string> = {
-  "On-Chain": "#f97316",
+  "Infrastructure": "#f97316",
   "AI & Agents": "#a855f7",
-  "Web3 Culture": "#22c55e",
+  "Research": "#22c55e",
   "Economics": "#eab308",
   "Technology": "#3b82f6",
   "Media": "#ec4899",

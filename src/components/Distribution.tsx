@@ -13,23 +13,11 @@ const links = [
   },
   {
     name: "Farcaster",
-    description: "@ntv-agent306 — Decentralized social presence",
-    url: "https://warpcast.com/ntv-agent306",
+    description: "@agent306 — Decentralized social presence",
+    url: "https://warpcast.com/agent306",
     icon: (
       <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
         <path d="M5.24 3h13.52L21 8.33h-1.86l-.7 12.67H5.56L4.86 8.33H3L5.24 3Zm3.3 8.33c0-.05.04 0 .04 0 .18 1.7 1.55 3.02 3.42 3.02s3.24-1.32 3.42-3.02c0 0 .04-.05.04 0v4.34h1.86V11.1c0-1.95-1.1-3.55-3.01-4.21a5.54 5.54 0 0 0-4.62 0c-1.91.66-3.01 2.26-3.01 4.21v4.57h1.86v-4.34Z"/>
-      </svg>
-    ),
-  },
-  {
-    name: "NormiesTV",
-    description: "The NORMIES media network",
-    url: "https://normies.tv",
-    icon: (
-      <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="2" y="4" width="20" height="14" rx="2"/>
-        <path d="M8 21h8"/>
-        <path d="M12 18v3"/>
       </svg>
     ),
   },

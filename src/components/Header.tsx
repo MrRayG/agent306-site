@@ -51,7 +51,6 @@ export default function Header() {
             { label: "Office", id: "hero" },
             { label: "Activity", id: "activity" },
             { label: "Research", id: "research" },
-            { label: "Hive", id: "hive" },
           ].map((item) => (
             <button
               key={item.id}

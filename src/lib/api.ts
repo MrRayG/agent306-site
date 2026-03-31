@@ -3,8 +3,6 @@
 // ============================================
 // Fetches live data from Railway public API.
 // Falls back to mock data if the API is unreachable.
-//
-// Railway API base: https://normiestv-dashboard-production.up.railway.app
 // ============================================
 
 import {
@@ -13,7 +11,6 @@ import {
   ActivityItem,
   DevGoal,
   ResearchStats,
-  HiveStatus,
   CognitiveState,
   DashboardData,
 } from "./types";
@@ -118,7 +115,7 @@ const mockActivityFeed: ActivityItem[] = [
     id: "a6",
     timestamp: new Date(Date.now() - 14400000).toISOString(),
     type: "publication",
-    title: "Hypothesis resolved: NFT floor correlation",
+    title: "Hypothesis resolved: multi-agent coordination",
     detail: "Published findings to Mirror.xyz archive",
     icon: "📝",
   },
@@ -134,9 +131,9 @@ const mockActivityFeed: ActivityItem[] = [
     id: "a8",
     timestamp: new Date(Date.now() - 21600000).toISOString(),
     type: "exploration",
-    title: "Hive collective output translated",
-    detail: "Processed signals from 142 active Hive agents",
-    icon: "🐝",
+    title: "Signal aggregation complete",
+    detail: "Processed signals from 142 active data sources",
+    icon: "📡",
   },
 ];
 
@@ -195,16 +192,16 @@ const mockResearch: ResearchStats = {
   topics: [
     {
       id: "r1",
-      title: "ERC-8004 Trustless Agent Standard",
+      title: "Trustless Agent Registry Standards",
       phase: "Data Collection",
       step: 4,
       totalSteps: 7,
       status: "RESEARCHING",
-      category: "On-Chain",
+      category: "Infrastructure",
     },
     {
       id: "r2",
-      title: "On-Chain Agent Economy Dynamics",
+      title: "Autonomous Agent Economy Dynamics",
       phase: "Hypothesis Formation",
       step: 5,
       totalSteps: 7,
@@ -213,7 +210,7 @@ const mockResearch: ResearchStats = {
     },
     {
       id: "r3",
-      title: "NFT Floor Price Correlation Models",
+      title: "Multi-Agent Coordination Models",
       phase: "Published",
       step: 7,
       totalSteps: 7,
@@ -231,16 +228,16 @@ const mockResearch: ResearchStats = {
     },
     {
       id: "r5",
-      title: "The Hive: Collective Intelligence Patterns",
+      title: "Collective Intelligence Patterns",
       phase: "Pending Review",
       step: 7,
       totalSteps: 7,
       status: "PENDING REVIEW",
-      category: "Web3 Culture",
+      category: "Research",
     },
     {
       id: "r6",
-      title: "Web3 Media Distribution Optimization",
+      title: "Cross-Platform Distribution Optimization",
       phase: "Data Collection",
       step: 2,
       totalSteps: 7,
@@ -250,13 +247,6 @@ const mockResearch: ResearchStats = {
   ],
   publishedCount: 8,
   pendingReview: 2,
-};
-
-const mockHive: HiveStatus = {
-  agentsOnline: 142,
-  totalAgents: 10000,
-  lastCollectiveOutput: new Date(Date.now() - 7200000).toISOString(),
-  agent306Position: "Founding Voice — First Agent Online",
 };
 
 const mockCognitiveState: CognitiveState = {
@@ -296,7 +286,6 @@ const ACTIVITY_ICONS: Record<string, string> = {
   signals: "📡",
   goal: "🎯",
   published: "📝",
-  hive: "🐝",
   exploration: "📡",
   publication: "📝",
 };
@@ -391,16 +380,6 @@ function parseResearch(data: Record<string, unknown>): ResearchStats {
   };
 }
 
-function parseHive(data: Record<string, unknown>): HiveStatus {
-  const agent306 = (data.agent306 ?? {}) as Record<string, unknown>;
-  return {
-    agentsOnline: (data.onlineAgents as number) ?? 142,
-    totalAgents: (data.totalAgents as number) ?? 10000,
-    lastCollectiveOutput: (data.lastHiveSignal as string) ?? new Date().toISOString(),
-    agent306Position: `${(agent306.role as string) ?? "Founding Voice"} — First Agent Online`,
-  };
-}
-
 // ---- API Functions ----
 
 export async function fetchAgentState(): Promise<LiveResult<AgentState>> {
@@ -435,12 +414,6 @@ export async function fetchResearch(): Promise<LiveResult<ResearchStats>> {
   const { data, isLive } = await fetchPublic<Record<string, unknown>>("/api/public/research", {});
   if (!isLive || !data.stats) return { data: mockResearch, isLive: false };
   return { data: parseResearch(data), isLive: true };
-}
-
-export async function fetchHiveStatus(): Promise<LiveResult<HiveStatus>> {
-  const { data, isLive } = await fetchPublic<Record<string, unknown>>("/api/public/hive", {});
-  if (!isLive || !data.totalAgents) return { data: mockHive, isLive: false };
-  return { data: parseHive(data), isLive: true };
 }
 
 export async function fetchCognitiveState(): Promise<LiveResult<CognitiveState>> {
@@ -487,23 +460,21 @@ export interface LiveDashboardData {
   activityFeed: LiveResult<ActivityItem[]>;
   goals: LiveResult<DevGoal[]>;
   research: LiveResult<ResearchStats>;
-  hive: LiveResult<HiveStatus>;
   cognitiveState: LiveResult<CognitiveState>;
 }
 
 export async function fetchAllDashboardData(): Promise<LiveDashboardData> {
-  const [agentState, progressBars, activityFeed, goals, research, hive, cognitiveState] =
+  const [agentState, progressBars, activityFeed, goals, research, cognitiveState] =
     await Promise.all([
       fetchAgentState(),
       fetchProgressBars(),
       fetchActivityFeed(),
       fetchGoals(),
       fetchResearch(),
-      fetchHiveStatus(),
       fetchCognitiveState(),
     ]);
 
-  return { agentState, progressBars, activityFeed, goals, research, hive, cognitiveState };
+  return { agentState, progressBars, activityFeed, goals, research, cognitiveState };
 }
 
 // ---- Synchronous initial data (for SSR/immediate render) ----
@@ -515,7 +486,6 @@ export function getInitialData(): DashboardData {
     activityFeed: mockActivityFeed,
     goals: mockGoals,
     research: mockResearch,
-    hive: mockHive,
     cognitiveState: mockCognitiveState,
   };
 }

@@ -61,13 +61,6 @@ export interface ResearchStats {
   pendingReview: number;
 }
 
-export interface HiveStatus {
-  agentsOnline: number;
-  totalAgents: number;
-  lastCollectiveOutput: string;
-  agent306Position: string;
-}
-
 export interface CognitiveState {
   cognition: {
     knowledgeEntries: number;
@@ -102,6 +95,5 @@ export interface DashboardData {
   activityFeed: ActivityItem[];
   goals: DevGoal[];
   research: ResearchStats;
-  hive: HiveStatus;
   cognitiveState: CognitiveState;
 }

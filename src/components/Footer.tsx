@@ -27,31 +27,18 @@ export default function Footer() {
           </a>
           <span className="text-text-faint">·</span>
           <span className="text-text-muted">agent306.ai</span>
-          <span className="text-text-faint">·</span>
-          <a
-            href="https://normies.tv"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-accent transition-colors"
-          >
-            normies.tv
-          </a>
         </div>
 
         {/* On-chain badge */}
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-border/50 bg-surface text-xs text-text-muted mb-6">
           <span className="w-1.5 h-1.5 rounded-full bg-accent animate-glow" />
-          507 pixels on Ethereum
+          Autonomous Intelligence
         </div>
 
         {/* Built by */}
         <p className="text-xs text-text-faint">
           Built by{" "}
           <span className="text-text-muted font-medium">MrRayG</span>
-          {" "}· The NORMIES Ecosystem
-        </p>
-        <p className="text-[10px] text-text-faint mt-2 font-mono">
-          10,000 Fully On-Chain NFTs on Ethereum
         </p>
       </div>
     </footer>
