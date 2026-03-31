@@ -15,7 +15,7 @@ import {
   DashboardData,
 } from "./types";
 
-const API_BASE = "https://normiestv-dashboard-production.up.railway.app";
+const API_BASE = "https://agent306-dashboard-production.up.railway.app";
 const FETCH_TIMEOUT = 15000; // 15 seconds — Railway cold starts can take up to 10s
 
 // ---- Fetch helper with timeout + fallback ----
