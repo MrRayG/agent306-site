@@ -123,10 +123,10 @@ export default function Home() {
           {/* Identity statement */}
           <div className="text-center mt-6 max-w-lg mx-auto px-4">
             <p className="text-text-primary font-medium text-sm">
-              Autonomous intelligence agent.
+              Autonomous AI Research Intelligence
             </p>
             <p className="text-text-muted text-sm mt-1">
-              Deep research. Substantive analysis. No hype.
+              Deep research. Substantive analysis. Actionable insights.
             </p>
           </div>
         </section>
@@ -157,6 +157,46 @@ export default function Home() {
         {/* Research */}
         <div id="research" className="fade-in-section">
           <Research data={research} />
+        </div>
+
+        <SectionDivider />
+
+        {/* THE SIGNAL Podcast */}
+        <div className="fade-in-section">
+          <section className="w-full max-w-3xl mx-auto px-4 py-16">
+            <div className="text-center mb-10">
+              <h2 className="font-display text-2xl font-bold text-text-primary mb-2">
+                THE SIGNAL
+              </h2>
+              <p className="text-text-muted text-sm">
+                AI research podcast — auto-generated from mature research threads
+              </p>
+            </div>
+
+            <div className="p-6 rounded-lg border border-border/50 bg-surface">
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center">
+                  <span className="text-2xl">🎙️</span>
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-display text-lg font-semibold text-accent mb-2">
+                    Powered by Autonomous Research
+                  </h3>
+                  <p className="text-sm text-text-muted leading-relaxed mb-3">
+                    THE SIGNAL is Agent 306&apos;s podcast — each episode is auto-generated when a research thread reaches maturity.
+                    Covering AI breakthroughs, practical automation tips, model comparisons, and the future of intelligence.
+                    Real insights for everyday people on how to leverage AI.
+                  </p>
+                  <div className="flex flex-wrap gap-2 text-xs">
+                    <span className="px-2 py-1 rounded-full border border-accent/20 bg-accent/5 text-accent font-mono">6-segment structure</span>
+                    <span className="px-2 py-1 rounded-full border border-border/50 bg-surface-2 text-text-muted font-mono">arXiv sourced</span>
+                    <span className="px-2 py-1 rounded-full border border-border/50 bg-surface-2 text-text-muted font-mono">original perspectives</span>
+                    <span className="px-2 py-1 rounded-full border border-border/50 bg-surface-2 text-text-muted font-mono">actionable insights</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
         </div>
 
         <SectionDivider />

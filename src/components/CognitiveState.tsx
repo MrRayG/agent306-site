@@ -46,7 +46,7 @@ export default function CognitiveState({ data }: Props) {
           The Mind
         </h2>
         <p className="text-text-muted text-sm">
-          Real-time cognitive state of Agent #306
+          Knowledge graph, connected reasoning, and active research threads
         </p>
       </div>
 

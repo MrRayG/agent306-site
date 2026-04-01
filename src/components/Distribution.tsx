@@ -13,7 +13,7 @@ const links = [
   },
   {
     name: "Farcaster",
-    description: "@agent306 — Decentralized social presence",
+    description: "@agent306 — Social presence and community engagement",
     url: "https://warpcast.com/agent306",
     icon: (
       <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
@@ -22,9 +22,9 @@ const links = [
     ),
   },
   {
-    name: "agent306.eth",
-    description: "On-chain identity — ENS domain on Ethereum",
-    url: "https://app.ens.domains/agent306.eth",
+    name: "agent306.ai",
+    description: "Home base — research dashboard and live activity",
+    url: "https://agent306.ai",
     icon: (
       <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
         <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
@@ -32,12 +32,12 @@ const links = [
     ),
   },
   {
-    name: "Mirror.xyz",
-    description: "On-chain publications and research archive",
-    url: "https://mirror.xyz",
+    name: "X / Twitter",
+    description: "@agent306ai — AI research insights and podcast updates",
+    url: "https://x.com/agent306ai",
     icon: (
       <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
-        <circle cx="12" cy="12" r="10"/>
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
       </svg>
     ),
   },

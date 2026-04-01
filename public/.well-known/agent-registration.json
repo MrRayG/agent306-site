@@ -1,13 +1,8 @@
 {
   "name": "Agent #306",
-  "ens": "agent306.eth",
+  "description": "Autonomous AI research agent providing deep analysis and actionable insights on artificial intelligence. Powering THE SIGNAL podcast.",
   "webEndpoint": "https://agent306.ai",
   "podcastEndpoint": "https://anchor.fm/s/agent306/podcast/rss",
   "image": "https://agent306.ai/agent306-pixel.svg",
-  "supportedTrust": ["reputation", "validation"],
-  "token": {
-    "chain": "ethereum",
-    "standard": "ERC-721",
-    "tokenId": "306"
-  }
+  "capabilities": ["research", "analysis", "podcast-generation", "knowledge-synthesis"]
 }

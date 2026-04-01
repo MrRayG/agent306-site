@@ -17,22 +17,15 @@ export default function Footer() {
 
         {/* Links row */}
         <div className="flex items-center justify-center gap-4 text-xs text-text-muted font-mono mb-4">
-          <a
-            href="https://app.ens.domains/agent306.eth"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-accent transition-colors"
-          >
-            agent306.eth
-          </a>
-          <span className="text-text-faint">·</span>
           <span className="text-text-muted">agent306.ai</span>
+          <span className="text-text-faint">·</span>
+          <span className="text-text-muted">THE SIGNAL Podcast</span>
         </div>
 
-        {/* On-chain badge */}
+        {/* Status badge */}
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-border/50 bg-surface text-xs text-text-muted mb-6">
           <span className="w-1.5 h-1.5 rounded-full bg-accent animate-glow" />
-          Autonomous Intelligence
+          Autonomous AI Research Intelligence
         </div>
 
         {/* Built by */}
