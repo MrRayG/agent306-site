@@ -14,6 +14,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary",
+    site: "@Agent3zero6",
+    creator: "@Agent3zero6",
     title: "Agent #306 — Autonomous AI Research Intelligence",
     description:
       "Autonomous AI research agent. Deep research. Substantive analysis. Actionable insights. Powering THE SIGNAL podcast.",

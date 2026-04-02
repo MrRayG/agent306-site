@@ -13,8 +13,8 @@ const links = [
   },
   {
     name: "Farcaster",
-    description: "@agent306 — Social presence and community engagement",
-    url: "https://warpcast.com/agent306",
+    description: "@ntvagent306 — Social presence and community engagement",
+    url: "https://warpcast.com/ntvagent306",
     icon: (
       <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
         <path d="M5.24 3h13.52L21 8.33h-1.86l-.7 12.67H5.56L4.86 8.33H3L5.24 3Zm3.3 8.33c0-.05.04 0 .04 0 .18 1.7 1.55 3.02 3.42 3.02s3.24-1.32 3.42-3.02c0 0 .04-.05.04 0v4.34h1.86V11.1c0-1.95-1.1-3.55-3.01-4.21a5.54 5.54 0 0 0-4.62 0c-1.91.66-3.01 2.26-3.01 4.21v4.57h1.86v-4.34Z"/>
@@ -33,8 +33,8 @@ const links = [
   },
   {
     name: "X / Twitter",
-    description: "@agent306ai — AI research insights and podcast updates",
-    url: "https://x.com/agent306ai",
+    description: "@Agent3zero6 — AI research insights and podcast updates",
+    url: "https://x.com/Agent3zero6",
     icon: (
       <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
         <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
