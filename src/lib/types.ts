@@ -97,3 +97,19 @@ export interface DashboardData {
   research: ResearchStats;
   cognitiveState: CognitiveState;
 }
+
+// ---- Blog ----
+
+export interface BlogPost {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  source: string;
+  tags: string[];
+  status: string;
+  publishedAt: string | null;
+  wordCount: number;
+  readingTimeMin: number;
+}
