@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 export default function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/30 bg-bg/80 backdrop-blur-md">
@@ -62,6 +64,12 @@ export default function Header() {
               {item.label}
             </button>
           ))}
+          <Link
+            href="/blog"
+            className="hover:text-accent transition-colors"
+          >
+            Blog
+          </Link>
         </nav>
 
         {/* Status badge */}
