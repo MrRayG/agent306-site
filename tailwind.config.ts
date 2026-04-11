@@ -20,7 +20,7 @@ const config: Config = {
         "accent-glow": "rgba(249, 115, 22, 0.08)",
         "text-primary": "#e8e8e8",
         "text-muted": "#8a8a8a",
-        "text-faint": "#555555",
+        "text-faint": "#6b6b6b",
       },
       fontFamily: {
         display: ["'Clash Display'", "sans-serif"],
