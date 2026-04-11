@@ -96,7 +96,7 @@ function CircularGauge({ value, max, color, label }: { value: number; max: numbe
           {value}
         </text>
       </svg>
-      <span className="text-text-muted text-[10px] font-mono leading-tight text-center">
+      <span className="text-text-muted text-[11px] font-mono leading-tight text-center">
         {label}
       </span>
     </div>
@@ -143,7 +143,7 @@ export default function KnowledgePulse({ data }: KnowledgePulseProps) {
           <p className="text-text-primary text-xl font-mono font-bold tabular-nums">
             {c.knowledgeEntries.toLocaleString()}
           </p>
-          <p className="text-text-faint text-[10px] font-mono mt-1">
+          <p className="text-text-muted text-[10px] font-mono mt-1">
             {c.knowledgeCategories} categories
           </p>
         </div>
@@ -174,7 +174,7 @@ export default function KnowledgePulse({ data }: KnowledgePulseProps) {
           <p className="text-text-primary text-xl font-mono font-bold tabular-nums">
             {c.reasoningQuality.hypothesesTested}
           </p>
-          <p className="text-text-faint text-[10px] font-mono mt-1">
+          <p className="text-text-muted text-[10px] font-mono mt-1">
             {(c.reasoningQuality.confirmationRate * 100).toFixed(0)}% confirmed
           </p>
         </div>
@@ -187,7 +187,7 @@ export default function KnowledgePulse({ data }: KnowledgePulseProps) {
           <p className="text-text-primary text-xl font-mono font-bold tabular-nums">
             {c.knowledgeConnections}
           </p>
-          <p className="text-text-faint text-[10px] font-mono mt-1">
+          <p className="text-text-muted text-[10px] font-mono mt-1">
             cross-knowledge links
           </p>
         </div>

@@ -61,7 +61,7 @@ export default function LiveFeed({ items }: LiveFeedProps) {
                   {item.title}
                 </p>
                 {item.detail && (
-                  <p className="text-[10px] text-text-faint mt-0.5 truncate">
+                  <p className="text-[10px] text-text-muted mt-0.5 truncate">
                     {item.detail}
                   </p>
                 )}
