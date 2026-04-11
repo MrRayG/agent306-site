@@ -378,6 +378,7 @@ function parseResearch(data: Record<string, unknown>): ResearchStats {
     })),
     publishedCount: (stats.published as number) ?? 0,
     pendingReview: (stats.pendingReview as number) ?? 0,
+    activeCount: (stats.active as number) ?? 0,
   };
 }
 

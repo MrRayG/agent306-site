@@ -1,5 +1,6 @@
 // ============================================
 // Agent 306 Public Dashboard — Type Definitions
+// v2 — Redesign with Triad Pipeline support
 // ============================================
 
 export type AgentStatus =
@@ -8,7 +9,8 @@ export type AgentStatus =
   | "podcasting"
   | "planning"
   | "idle"
-  | "transitioning";
+  | "transitioning"
+  | "reasoning";
 
 export interface AgentState {
   currentStatus: AgentStatus;
@@ -59,6 +61,7 @@ export interface ResearchStats {
   topics: ResearchTopic[];
   publishedCount: number;
   pendingReview: number;
+  activeCount?: number;
 }
 
 export interface CognitiveState {
@@ -87,6 +90,21 @@ export interface CognitiveState {
     evolutionDay: number;
   };
   generatedAt: string;
+}
+
+// Triad Pipeline types
+export interface TriadAgent {
+  name: string;
+  code: string; // "3" | "0" | "6"
+  role: string;
+  status: "active" | "idle" | "waiting";
+  currentTask?: string;
+}
+
+export interface TriadState {
+  agents: [TriadAgent, TriadAgent, TriadAgent];
+  lastHandoff?: string;
+  cycleCount: number;
 }
 
 export interface DashboardData {
