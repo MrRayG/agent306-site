@@ -1,120 +1,151 @@
 "use client";
 
-import { AgentState } from "@/lib/types";
-import { formatTimeAgo } from "@/lib/api";
-
-const STATUS_CONFIG: Record<string, { label: string; color: string; pulse: boolean }> = {
-  researching: { label: "RESEARCHING", color: "#f97316", pulse: true },
-  reasoning: { label: "REASONING", color: "#a78bfa", pulse: true },
-  writing: { label: "WRITING", color: "#34d399", pulse: true },
-  podcasting: { label: "PODCASTING", color: "#f97316", pulse: true },
-  planning: { label: "PLANNING", color: "#60a5fa", pulse: true },
-  idle: { label: "IDLE", color: "#555555", pulse: false },
-  transitioning: { label: "TRANSITIONING", color: "#fbbf24", pulse: true },
-};
+import { useEffect, useRef, useCallback } from "react";
+import Image from "next/image";
 
 interface HeroV2Props {
-  agentState: AgentState;
   kbCount: number;
-  evolutionDay: number;
+  hypothesesTested: number;
+  knowledgeConnections: number;
 }
 
-export default function HeroV2({ agentState, kbCount, evolutionDay }: HeroV2Props) {
-  const config = STATUS_CONFIG[agentState.currentStatus] || STATUS_CONFIG.idle;
+function AnimatedCounter({ target }: { target: number }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const animated = useRef(false);
 
+  const animate = useCallback(() => {
+    if (animated.current || !ref.current) return;
+    animated.current = true;
+    const duration = 1200;
+    const start = performance.now();
+
+    function update(now: number) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      if (ref.current) {
+        ref.current.textContent = Math.round(target * eased).toLocaleString();
+      }
+      if (progress < 1) requestAnimationFrame(update);
+    }
+
+    requestAnimationFrame(update);
+  }, [target]);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            animate();
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [animate]);
+
+  return <span ref={ref} className="counter">0</span>;
+}
+
+export default function HeroV2({ kbCount, hypothesesTested, knowledgeConnections }: HeroV2Props) {
   return (
-    <section className="w-full max-w-5xl mx-auto px-4 pt-10 pb-6">
-      <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
-        {/* Logo + Identity */}
-        <div className="flex-shrink-0">
-          <svg
-            className="w-20 h-20"
-            viewBox="0 0 80 80"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-label="Agent #306 logo"
-          >
-            <path
-              d="M40 4 L72 20 L72 60 L40 76 L8 60 L8 20 Z"
-              stroke="#f97316"
-              strokeWidth="1.5"
-              strokeLinejoin="round"
-              fill="none"
+    <section className="relative min-h-[90vh] flex items-center overflow-hidden py-16">
+      {/* Background image */}
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="/assets/hero.png"
+          alt=""
+          fill
+          className="object-cover opacity-45"
+          style={{
+            maskImage: "linear-gradient(to bottom, black 30%, transparent 100%)",
+            WebkitMaskImage: "linear-gradient(to bottom, black 30%, transparent 100%)",
+          }}
+          priority
+        />
+      </div>
+
+      <div className="relative z-[2] max-w-[1200px] mx-auto px-4 md:px-8 w-full">
+        <div className="max-w-[800px]">
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-1 bg-accent-dim border border-border rounded-full font-mono text-xs text-accent font-medium mb-6">
+            <span
+              className="w-1.5 h-1.5 rounded-full bg-accent"
+              style={{ animation: "pulse-dot 2s ease-in-out infinite" }}
             />
-            <path
-              d="M24 44 C24 44 26 36 32 34 C34 33 36 28 40 26 C44 28 46 33 48 34 C54 36 56 44 56 44 L58 44 C58 44 58 46 56 46 L24 46 C22 46 22 44 24 44Z"
-              fill="#f97316"
-              opacity="0.9"
-            />
-            <rect x="26" y="43" width="28" height="2" rx="1" fill="#f97316" opacity="0.6" />
-            <text
-              x="40"
-              y="62"
-              textAnchor="middle"
-              fill="#f97316"
-              fontFamily="sans-serif"
-              fontWeight="700"
-              fontSize="13"
-              letterSpacing="1"
-            >
-              306
-            </text>
-          </svg>
-        </div>
-
-        {/* Name + Tagline */}
-        <div className="flex-1 text-center sm:text-left">
-          <h1 className="font-display text-3xl sm:text-4xl font-bold text-white mb-1">
-            Agent <span className="gradient-text">#306</span>
-          </h1>
-          <p className="text-text-muted text-sm mb-4">
-            Autonomous AI Research Intelligence
-          </p>
-
-          {/* Status Bar */}
-          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-            {/* Live status indicator */}
-            <div
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-mono font-medium"
-              style={{
-                borderColor: `${config.color}40`,
-                backgroundColor: `${config.color}10`,
-                color: config.color,
-              }}
-            >
-              <span className="relative flex h-2 w-2">
-                {config.pulse && (
-                  <span
-                    className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
-                    style={{ backgroundColor: config.color }}
-                  />
-                )}
-                <span
-                  className="relative inline-flex rounded-full h-2 w-2"
-                  style={{ backgroundColor: config.color }}
-                />
-              </span>
-              {config.label}
-            </div>
-
-            {/* Quick stats */}
-            <span className="text-text-faint text-xs font-mono">
-              KB: {kbCount.toLocaleString()}
-            </span>
-            <span className="text-text-faint text-xs font-mono">
-              Day {evolutionDay}
-            </span>
-            <span className="text-text-faint text-xs font-mono">
-              {formatTimeAgo(agentState.lastUpdated)}
-            </span>
+            AUTONOMOUS RESEARCH ACTIVE
           </div>
 
-          {/* Current task description */}
-          {agentState.statusLabel && (
-            <p className="text-text-muted text-xs mt-2 max-w-xs sm:max-w-md truncate">
-              {agentState.statusLabel}
-            </p>
-          )}
+          {/* Heading */}
+          <h1 className="font-display text-[clamp(2.5rem,1rem+4vw,5rem)] font-extrabold leading-[1.05] tracking-tight mb-6">
+            Three Minds.<br />
+            One <span className="text-accent">Signal</span>.<br />
+            Zero Fluff.
+          </h1>
+
+          {/* Subtitle */}
+          <p className="text-[clamp(1.125rem,1rem+0.75vw,1.5rem)] text-text-muted leading-relaxed max-w-[600px] mb-8">
+            Agent #306 is a fully autonomous AI research intelligence. It reads the noise, debates itself, and delivers actionable insights through THE SIGNAL podcast.
+          </p>
+
+          {/* CTA buttons */}
+          <div className="flex flex-wrap gap-4">
+            <a
+              href="#signal"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-accent text-[#08080a] font-bold text-sm rounded-lg hover:bg-[#fb923c] hover:-translate-y-px hover:shadow-[0_4px_20px_rgba(249,115,22,0.35)] transition-all active:translate-y-0"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
+                <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
+              </svg>
+              Listen to THE SIGNAL
+            </a>
+            <a
+              href="#triad"
+              className="inline-flex items-center gap-2 px-6 py-3 border border-border-subtle text-text-muted font-medium text-sm rounded-lg hover:text-text-primary hover:border-[rgba(255,255,255,0.15)] hover:-translate-y-px transition-all"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="4" y="4" width="16" height="16" rx="2" />
+                <rect x="9" y="9" width="6" height="6" />
+                <path d="M15 2v2M15 20v2M2 15h2M2 9h2M20 15h2M20 9h2M9 2v2M9 20v2" />
+              </svg>
+              How it works
+            </a>
+          </div>
+
+          {/* Stats bar */}
+          <div className="grid grid-cols-3 gap-4 mt-12 pt-8 border-t border-border-subtle">
+            <div>
+              <div className="font-mono text-[clamp(1.5rem,1.2rem+1.25vw,2.25rem)] font-bold text-text-primary tabular-nums">
+                <AnimatedCounter target={kbCount} />
+              </div>
+              <div className="text-xs text-text-muted mt-1 uppercase tracking-widest">
+                Knowledge entries
+              </div>
+            </div>
+            <div>
+              <div className="font-mono text-[clamp(1.5rem,1.2rem+1.25vw,2.25rem)] font-bold text-text-primary tabular-nums">
+                <AnimatedCounter target={hypothesesTested} />
+              </div>
+              <div className="text-xs text-text-muted mt-1 uppercase tracking-widest">
+                Hypotheses tested
+              </div>
+            </div>
+            <div>
+              <div className="font-mono text-[clamp(1.5rem,1.2rem+1.25vw,2.25rem)] font-bold text-text-primary tabular-nums">
+                <AnimatedCounter target={knowledgeConnections} />
+              </div>
+              <div className="text-xs text-text-muted mt-1 uppercase tracking-widest">
+                Knowledge connections
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
