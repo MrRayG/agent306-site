@@ -1,85 +1,99 @@
 "use client";
 
-import Link from "next/link";
+import { useState } from "react";
 
 export default function HeaderV2() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    setMobileOpen(false);
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/30 bg-bg/80 backdrop-blur-md">
-      <div className="max-w-5xl mx-auto px-4 h-12 flex items-center justify-between">
+    <header className="sticky top-0 z-50 w-full bg-[rgba(8,8,10,0.85)] backdrop-blur-2xl border-b border-border-subtle">
+      <div className="max-w-[1200px] mx-auto px-4 md:px-8 h-16 flex items-center justify-between">
         {/* Logo */}
-        <div className="flex items-center gap-2">
-          <svg
-            className="w-6 h-6"
-            viewBox="0 0 80 80"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-label="Agent #306 logo"
-          >
-            <path
-              d="M40 4 L72 20 L72 60 L40 76 L8 60 L8 20 Z"
-              stroke="#f97316"
-              strokeWidth="1.5"
-              strokeLinejoin="round"
-              fill="none"
-            />
-            <path
-              d="M24 44 C24 44 26 36 32 34 C34 33 36 28 40 26 C44 28 46 33 48 34 C54 36 56 44 56 44 L58 44 C58 44 58 46 56 46 L24 46 C22 46 22 44 24 44Z"
-              fill="#f97316"
-              opacity="0.9"
-            />
-            <rect x="26" y="43" width="28" height="2" rx="1" fill="#f97316" opacity="0.6" />
-            <text
-              x="40"
-              y="62"
-              textAnchor="middle"
-              fill="#f97316"
-              fontFamily="sans-serif"
-              fontWeight="700"
-              fontSize="13"
-              letterSpacing="1"
-            >
-              306
-            </text>
-          </svg>
-          <span className="font-display text-xs font-semibold text-text-primary">
-            Agent #306
-          </span>
-        </div>
+        <a href="#" className="flex items-center gap-3 font-display font-bold text-lg text-text-primary no-underline">
+          <div className="w-9 h-9 flex items-center justify-center bg-accent rounded-md text-[14px] font-mono font-extrabold text-[#08080a]">
+            306
+          </div>
+          <span>Agent <span className="text-accent">#306</span></span>
+        </a>
 
-        {/* Nav */}
-        <nav className="hidden sm:flex items-center gap-5 text-[11px] text-text-muted font-mono">
+        {/* Desktop Nav */}
+        <nav className="hidden md:block">
+          <ul className="flex items-center gap-8 list-none">
+            {[
+              { label: "Triad", id: "triad" },
+              { label: "Knowledge", id: "pulse" },
+              { label: "THE SIGNAL", id: "signal" },
+              { label: "Manuscripts", id: "manuscripts" },
+              { label: "Feeds", id: "feeds" },
+            ].map((item) => (
+              <li key={item.id}>
+                <button
+                  onClick={() => scrollTo(item.id)}
+                  className="text-sm text-text-muted font-medium tracking-wide hover:text-text-primary transition-colors cursor-pointer"
+                >
+                  {item.label}
+                </button>
+              </li>
+            ))}
+            <li>
+              <div className="flex items-center gap-2 text-xs font-mono text-green">
+                <span
+                  className="w-2 h-2 rounded-full bg-green"
+                  style={{ animation: "pulse-dot 2s ease-in-out infinite" }}
+                />
+                LIVE
+              </div>
+            </li>
+          </ul>
+        </nav>
+
+        {/* Mobile hamburger */}
+        <button
+          className="flex md:hidden flex-col gap-[5px] p-2 cursor-pointer"
+          aria-label="Toggle menu"
+          onClick={() => setMobileOpen(!mobileOpen)}
+        >
+          <span
+            className="block w-5 h-0.5 bg-text-primary transition-transform"
+            style={mobileOpen ? { transform: "rotate(45deg) translate(5px, 5px)" } : {}}
+          />
+          <span
+            className="block w-5 h-0.5 bg-text-primary transition-opacity"
+            style={mobileOpen ? { opacity: 0 } : {}}
+          />
+          <span
+            className="block w-5 h-0.5 bg-text-primary transition-transform"
+            style={mobileOpen ? { transform: "rotate(-45deg) translate(5px, -5px)" } : {}}
+          />
+        </button>
+      </div>
+
+      {/* Mobile nav overlay */}
+      {mobileOpen && (
+        <div className="fixed top-16 left-0 right-0 bottom-0 bg-[rgba(8,8,10,0.97)] backdrop-blur-xl z-[99] p-8 px-4 md:hidden">
           {[
             { label: "Triad", id: "triad" },
-            { label: "Knowledge", id: "knowledge" },
-            { label: "Research", id: "research" },
-            { label: "Feed", id: "feed" },
+            { label: "Knowledge", id: "pulse" },
+            { label: "THE SIGNAL", id: "signal" },
+            { label: "Manuscripts", id: "manuscripts" },
+            { label: "Feeds", id: "feeds" },
+            { label: "Research", id: "breakthroughs" },
           ].map((item) => (
             <button
               key={item.id}
               onClick={() => scrollTo(item.id)}
-              className="hover:text-accent transition-colors cursor-pointer"
+              className="block w-full text-left py-4 text-lg text-text-muted border-b border-border-subtle hover:text-text-primary transition-colors cursor-pointer"
             >
               {item.label}
             </button>
           ))}
-          <Link href="/blog" className="hover:text-accent transition-colors">
-            Blog
-          </Link>
-        </nav>
-
-        {/* Live indicator */}
-        <div className="flex items-center gap-1.5">
-          <span className="relative flex h-1.5 w-1.5">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75" />
-            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-accent" />
-          </span>
-          <span className="text-[10px] font-mono text-text-faint">LIVE</span>
         </div>
-      </div>
+      )}
     </header>
   );
 }

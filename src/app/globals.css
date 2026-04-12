@@ -2,14 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=satoshi@300,400,500,700&display=swap');
+@import url('https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@400,500,700,800&f[]=satoshi@300,400,500,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
 
 :root {
-  --color-bg: #0a0a0a;
-  --color-surface: #111111;
+  --color-bg: #08080a;
+  --color-surface: #0f0f12;
+  --color-surface-2: #151519;
+  --color-surface-3: #1a1a1f;
+  --color-border: rgba(249, 115, 22, 0.12);
+  --color-border-subtle: rgba(255, 255, 255, 0.06);
   --color-accent: #f97316;
   --color-accent-dim: rgba(249, 115, 22, 0.15);
   --color-accent-glow: rgba(249, 115, 22, 0.08);
+  --color-text: #e8e6e3;
+  --color-text-muted: #8a8880;
+  --color-text-faint: #504e49;
+  --color-green: #22c55e;
+  --color-green-dim: rgba(34, 197, 94, 0.15);
 }
 
 * {
@@ -24,7 +34,7 @@ html {
 
 body {
   background: var(--color-bg);
-  color: #e8e8e8;
+  color: var(--color-text);
   overflow-x: hidden;
 }
 
@@ -38,21 +48,14 @@ body {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0a0a0a;
+  background: #08080a;
 }
 ::-webkit-scrollbar-thumb {
-  background: #2a2a2a;
+  background: #1a1a1f;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #3a3a3a;
-}
-
-/* Pixel art rendering */
-.pixelated {
-  image-rendering: pixelated;
-  image-rendering: -moz-crisp-edges;
-  image-rendering: crisp-edges;
+  background: #2a2a2a;
 }
 
 /* Gradient text */
@@ -66,6 +69,19 @@ body {
 /* Progress bar gradient */
 .progress-gradient {
   background: linear-gradient(90deg, #ef4444 0%, #eab308 50%, #22c55e 100%);
+}
+
+/* Animated background grid */
+.grid-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image:
+    linear-gradient(rgba(249, 115, 22, 0.3) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(249, 115, 22, 0.3) 1px, transparent 1px);
+  background-size: 60px 60px;
 }
 
 /* Ambient glow effect */
@@ -99,13 +115,31 @@ body {
   transform: translateY(0);
 }
 
-/* Shimmer animation for progress bars */
+/* Counter animation number formatting */
+.counter {
+  display: inline-block;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* Pulse dot animation (for status indicators) */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+  50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+}
+
+/* Pipeline step pulse */
+@keyframes pulse-step {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Shimmer animation */
 @keyframes shimmer {
   0% { transform: translateX(-100%); }
   100% { transform: translateX(100%); }
 }
 
-/* Mood pulse animation for cognitive state */
+/* Mood pulse animation */
 .mood-pulse {
   animation: moodPulse 2s ease-in-out infinite;
 }

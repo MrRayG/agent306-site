@@ -5,9 +5,10 @@ import HeaderV2 from "@/components/HeaderV2";
 import HeroV2 from "@/components/HeroV2";
 import TriadPipeline from "@/components/TriadPipeline";
 import KnowledgePulse from "@/components/KnowledgePulse";
-import ResearchThreads from "@/components/ResearchThreads";
-import LiveFeed from "@/components/LiveFeed";
 import ContentSection from "@/components/ContentSection";
+import Manuscripts from "@/components/Manuscripts";
+import LiveFeeds from "@/components/LiveFeeds";
+import Breakthroughs from "@/components/Breakthroughs";
 import DistributionV2 from "@/components/DistributionV2";
 import {
   fetchAllDashboardData,
@@ -27,7 +28,7 @@ const initial = getInitialData();
 
 export default function Home() {
   const [agentState, setAgentState] = useState<AgentState>(initial.agentState);
-  const [activityFeed, setActivityFeed] = useState<ActivityItem[]>(initial.activityFeed);
+  const [, setActivityFeed] = useState<ActivityItem[]>(initial.activityFeed);
   const [, setGoals] = useState<DevGoal[]>(initial.goals);
   const [research, setResearch] = useState<ResearchStats>(initial.research);
   const [cognitiveState, setCognitiveState] = useState<CognitiveStateType>(initial.cognitiveState);
@@ -99,26 +100,24 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-bg relative">
+      {/* Subtle grid background */}
+      <div className="grid-bg" aria-hidden="true" />
+
       {/* Ambient glow */}
       <div className="ambient-glow" aria-hidden="true" />
 
       <HeaderV2 />
 
       <main className="relative z-10">
-        {/* Hero — compact identity + live status */}
+        {/* Hero */}
         <HeroV2
-          agentState={agentState}
           kbCount={cognitiveState.cognition.knowledgeEntries}
-          evolutionDay={cognitiveState.cognition.evolutionDay}
+          hypothesesTested={cognitiveState.cognition.reasoningQuality.hypothesesTested}
+          knowledgeConnections={cognitiveState.cognition.knowledgeConnections}
         />
 
-        {/* Thin divider */}
-        <div className="w-full max-w-5xl mx-auto px-4">
-          <div className="border-t border-border/20" />
-        </div>
-
         {/* Triad Pipeline */}
-        <div id="triad" className="fade-in-section">
+        <div className="fade-in-section">
           <TriadPipeline
             agentState={agentState}
             research={research}
@@ -126,44 +125,33 @@ export default function Home() {
           />
         </div>
 
-        <div className="w-full max-w-5xl mx-auto px-4">
-          <div className="border-t border-border/20" />
-        </div>
-
         {/* Knowledge Pulse */}
-        <div id="knowledge" className="fade-in-section">
+        <div className="fade-in-section">
           <KnowledgePulse data={cognitiveState} />
         </div>
 
-        <div className="w-full max-w-5xl mx-auto px-4">
-          <div className="border-t border-border/20" />
-        </div>
-
-        {/* Research Threads — Kanban */}
-        <div id="research" className="fade-in-section">
-          <ResearchThreads data={research} />
-        </div>
-
-        <div className="w-full max-w-5xl mx-auto px-4">
-          <div className="border-t border-border/20" />
-        </div>
-
-        {/* Live Feed — compact ticker */}
-        <div id="feed" className="fade-in-section">
-          <LiveFeed items={activityFeed} />
-        </div>
-
-        <div className="w-full max-w-5xl mx-auto px-4">
-          <div className="border-t border-border/20" />
-        </div>
-
-        {/* Content — THE SIGNAL + Blog */}
-        <div id="content" className="fade-in-section">
+        {/* THE SIGNAL podcast */}
+        <div className="fade-in-section">
           <ContentSection posts={blogPosts} />
+        </div>
+
+        {/* Research Manuscripts */}
+        <div className="fade-in-section">
+          <Manuscripts />
+        </div>
+
+        {/* Live Feeds */}
+        <div className="fade-in-section">
+          <LiveFeeds />
+        </div>
+
+        {/* Recent Breakthroughs */}
+        <div className="fade-in-section">
+          <Breakthroughs research={research} />
         </div>
       </main>
 
-      {/* Distribution footer */}
+      {/* Footer */}
       <DistributionV2 />
     </div>
   );
