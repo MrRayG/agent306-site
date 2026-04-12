@@ -149,6 +149,11 @@ body {
   50% { opacity: 0.5; box-shadow: 0 0 8px rgba(249, 115, 22, 0.7); }
 }
 
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(16px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
