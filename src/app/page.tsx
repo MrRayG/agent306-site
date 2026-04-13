@@ -110,7 +110,7 @@ export default function Home() {
 
       <main className="relative z-10">
         {/* Hero */}
-        <HeroV2 />
+        <HeroV2 evolutionDay={cognitiveState.cognition.evolutionDay} />
 
         {/* Triad Pipeline */}
         <div className="fade-in-section">

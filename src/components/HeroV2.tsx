@@ -1,7 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useMemo } from "react";
+import { useEffect, useRef } from "react";
 import Image from "next/image";
+
+interface HeroV2Props {
+  evolutionDay?: number;
+}
 
 /* ─── Animated neural-network canvas ─── */
 function NeuralCanvas() {
@@ -161,12 +165,7 @@ function ActivityTicker() {
   );
 }
 
-export default function HeroV2() {
-  const dayCount = useMemo(() => {
-    const launch = new Date("2025-01-01");
-    const now = new Date();
-    return Math.floor((now.getTime() - launch.getTime()) / 86400000);
-  }, []);
+export default function HeroV2({ evolutionDay }: HeroV2Props) {
 
   return (
     <section className="relative min-h-[90vh] flex items-center overflow-hidden py-16">
@@ -244,7 +243,7 @@ export default function HeroV2() {
                 Neural Activity
               </div>
               <span className="font-mono text-[11px] text-text-faint">
-                Day {dayCount} of autonomous operation
+                Day {evolutionDay ?? 10} of autonomous operation
               </span>
             </div>
             <div className="relative h-[120px] rounded-lg overflow-hidden border border-border-subtle bg-[rgba(8,8,10,0.6)]">
