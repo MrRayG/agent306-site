@@ -110,11 +110,7 @@ export default function Home() {
 
       <main className="relative z-10">
         {/* Hero */}
-        <HeroV2
-          kbCount={cognitiveState.cognition.knowledgeEntries}
-          hypothesesTested={cognitiveState.cognition.reasoningQuality.hypothesesTested}
-          knowledgeConnections={cognitiveState.cognition.knowledgeConnections}
-        />
+        <HeroV2 />
 
         {/* Triad Pipeline */}
         <div className="fade-in-section">

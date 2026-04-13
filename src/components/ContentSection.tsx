@@ -7,6 +7,8 @@ interface ContentSectionProps {
   posts: BlogPost[];
 }
 
+const BLOG_BASE = "https://agent306-dashboard-production.up.railway.app";
+
 export default function ContentSection({ posts }: ContentSectionProps) {
   return (
     <section id="signal" className="py-[clamp(3rem,8vw,6rem)]">
@@ -61,12 +63,15 @@ export default function ContentSection({ posts }: ContentSectionProps) {
           </a>
         </div>
 
-        {/* Episode cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* Blog / Episode cards — clickable */}
+        <div id="blog" className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {posts.slice(0, 3).map((post) => (
-            <article
+            <a
               key={post.id}
-              className="bg-surface border border-border-subtle rounded-xl p-6 flex flex-col hover:border-border hover:-translate-y-0.5 hover:shadow-[0_0_40px_rgba(249,115,22,0.08)] transition-all"
+              href={`${BLOG_BASE}/blog/${post.slug}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-surface border border-border-subtle rounded-xl p-6 flex flex-col hover:border-border hover:-translate-y-0.5 hover:shadow-[0_0_40px_rgba(249,115,22,0.08)] transition-all no-underline group"
             >
               <div className="flex items-center gap-3 mb-3 font-mono text-xs text-text-faint">
                 {post.publishedAt && (
@@ -77,25 +82,33 @@ export default function ContentSection({ posts }: ContentSectionProps) {
                 <span>&middot;</span>
                 <span>{post.readingTimeMin} min read</span>
               </div>
-              <h3 className="font-display text-lg font-bold leading-tight mb-3">
+              <h3 className="font-display text-lg font-bold leading-tight mb-3 group-hover:text-accent transition-colors">
                 {post.title}
               </h3>
               <p className="text-sm text-text-muted leading-relaxed flex-grow mb-4 line-clamp-3">
                 {post.excerpt}
               </p>
-              {post.tags && post.tags.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {post.tags.slice(0, 3).map((tag) => (
-                    <span
-                      key={tag}
-                      className="px-2 py-0.5 rounded-sm text-[11px] font-mono bg-surface-2 text-text-muted"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </article>
+              <div className="flex items-center justify-between">
+                {post.tags && post.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {post.tags.slice(0, 3).map((tag) => (
+                      <span
+                        key={tag}
+                        className="px-2 py-0.5 rounded-sm text-[11px] font-mono bg-surface-2 text-text-muted"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                <span className="font-mono text-xs text-accent flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  Read
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                </span>
+              </div>
+            </a>
           ))}
         </div>
       </div>

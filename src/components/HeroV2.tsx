@@ -1,59 +1,173 @@
 "use client";
 
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useMemo } from "react";
 import Image from "next/image";
 
-interface HeroV2Props {
-  kbCount: number;
-  hypothesesTested: number;
-  knowledgeConnections: number;
-}
-
-function AnimatedCounter({ target }: { target: number }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const animated = useRef(false);
-
-  const animate = useCallback(() => {
-    if (animated.current || !ref.current) return;
-    animated.current = true;
-    const duration = 1200;
-    const start = performance.now();
-
-    function update(now: number) {
-      const elapsed = now - start;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      if (ref.current) {
-        ref.current.textContent = Math.round(target * eased).toLocaleString();
-      }
-      if (progress < 1) requestAnimationFrame(update);
-    }
-
-    requestAnimationFrame(update);
-  }, [target]);
+/* ─── Animated neural-network canvas ─── */
+function NeuralCanvas() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const animRef = useRef<number>(0);
 
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            animate();
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.5 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [animate]);
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
-  return <span ref={ref} className="counter">0</span>;
+    let w = 0;
+    let h = 0;
+
+    function resize() {
+      if (!canvas) return;
+      const rect = canvas.getBoundingClientRect();
+      w = rect.width * 2;
+      h = rect.height * 2;
+      canvas.width = w;
+      canvas.height = h;
+    }
+    resize();
+    window.addEventListener("resize", resize);
+
+    // Create nodes
+    const NODE_COUNT = 28;
+    const nodes = Array.from({ length: NODE_COUNT }, () => ({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      vx: (Math.random() - 0.5) * 0.6,
+      vy: (Math.random() - 0.5) * 0.6,
+      r: 2 + Math.random() * 3,
+      pulse: Math.random() * Math.PI * 2,
+    }));
+
+    let frame = 0;
+
+    function draw() {
+      if (!ctx) return;
+      ctx.clearRect(0, 0, w, h);
+      frame++;
+
+      // Move nodes
+      for (const n of nodes) {
+        n.x += n.vx;
+        n.y += n.vy;
+        n.pulse += 0.02;
+        if (n.x < 0 || n.x > w) n.vx *= -1;
+        if (n.y < 0 || n.y > h) n.vy *= -1;
+      }
+
+      // Draw connections
+      const CONNECT_DIST = w * 0.2;
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const dx = nodes[i].x - nodes[j].x;
+          const dy = nodes[i].y - nodes[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < CONNECT_DIST) {
+            const alpha = (1 - dist / CONNECT_DIST) * 0.25;
+            // Pulse traveling along connection
+            const pulse = Math.sin(frame * 0.03 + i + j) * 0.5 + 0.5;
+            ctx.beginPath();
+            ctx.moveTo(nodes[i].x, nodes[i].y);
+            ctx.lineTo(nodes[j].x, nodes[j].y);
+            ctx.strokeStyle = `rgba(249, 115, 22, ${alpha * (0.4 + pulse * 0.6)})`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
+        }
+      }
+
+      // Draw nodes
+      for (const n of nodes) {
+        const glow = Math.sin(n.pulse) * 0.5 + 0.5;
+        const r = n.r * (1 + glow * 0.4);
+
+        // Glow
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, r * 3, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(249, 115, 22, ${0.06 + glow * 0.06})`;
+        ctx.fill();
+
+        // Core
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(249, 115, 22, ${0.5 + glow * 0.5})`;
+        ctx.fill();
+      }
+
+      animRef.current = requestAnimationFrame(draw);
+    }
+
+    animRef.current = requestAnimationFrame(draw);
+
+    return () => {
+      cancelAnimationFrame(animRef.current);
+      window.removeEventListener("resize", resize);
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className="absolute inset-0 w-full h-full"
+      style={{ opacity: 0.6 }}
+    />
+  );
 }
 
-export default function HeroV2({ kbCount, hypothesesTested, knowledgeConnections }: HeroV2Props) {
+/* ─── Rolling ticker labels ─── */
+const TICKER_ITEMS = [
+  "scanning arXiv feeds",
+  "forming hypothesis",
+  "cross-referencing knowledge graph",
+  "running debate protocol",
+  "synthesizing findings",
+  "drafting manuscript",
+  "evaluating confidence scores",
+  "updating knowledge base",
+  "analyzing on-chain data",
+  "generating podcast script",
+];
+
+function ActivityTicker() {
+  const idx = useRef(0);
+  const ref = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      idx.current = (idx.current + 1) % TICKER_ITEMS.length;
+      if (ref.current) {
+        ref.current.style.opacity = "0";
+        ref.current.style.transform = "translateY(4px)";
+        setTimeout(() => {
+          if (ref.current) {
+            ref.current.textContent = TICKER_ITEMS[idx.current];
+            ref.current.style.opacity = "1";
+            ref.current.style.transform = "translateY(0)";
+          }
+        }, 200);
+      }
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <span
+      ref={ref}
+      className="inline-block transition-all duration-200"
+      style={{ opacity: 1 }}
+    >
+      {TICKER_ITEMS[0]}
+    </span>
+  );
+}
+
+export default function HeroV2() {
+  const dayCount = useMemo(() => {
+    const launch = new Date("2025-01-01");
+    const now = new Date();
+    return Math.floor((now.getTime() - launch.getTime()) / 86400000);
+  }, []);
+
   return (
     <section className="relative min-h-[90vh] flex items-center overflow-hidden py-16">
       {/* Background image */}
@@ -119,30 +233,27 @@ export default function HeroV2({ kbCount, hypothesesTested, knowledgeConnections
             </a>
           </div>
 
-          {/* Stats bar */}
-          <div className="grid grid-cols-3 gap-4 mt-12 pt-8 border-t border-border-subtle">
-            <div>
-              <div className="font-mono text-[clamp(1.5rem,1.2rem+1.25vw,2.25rem)] font-bold text-text-primary tabular-nums">
-                <AnimatedCounter target={kbCount} />
+          {/* Neural Activity visualization — replaces stale counters */}
+          <div className="mt-12 pt-8 border-t border-border-subtle">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="font-mono text-[11px] text-accent uppercase tracking-[0.12em] font-medium flex items-center gap-2">
+                <span
+                  className="w-1.5 h-1.5 rounded-full bg-green"
+                  style={{ animation: "pulse-dot 2s ease-in-out infinite" }}
+                />
+                Neural Activity
               </div>
-              <div className="text-xs text-text-muted mt-1 uppercase tracking-widest">
-                Knowledge entries
-              </div>
+              <span className="font-mono text-[11px] text-text-faint">
+                Day {dayCount} of autonomous operation
+              </span>
             </div>
-            <div>
-              <div className="font-mono text-[clamp(1.5rem,1.2rem+1.25vw,2.25rem)] font-bold text-text-primary tabular-nums">
-                <AnimatedCounter target={hypothesesTested} />
-              </div>
-              <div className="text-xs text-text-muted mt-1 uppercase tracking-widest">
-                Hypotheses tested
-              </div>
-            </div>
-            <div>
-              <div className="font-mono text-[clamp(1.5rem,1.2rem+1.25vw,2.25rem)] font-bold text-text-primary tabular-nums">
-                <AnimatedCounter target={knowledgeConnections} />
-              </div>
-              <div className="text-xs text-text-muted mt-1 uppercase tracking-widest">
-                Knowledge connections
+            <div className="relative h-[120px] rounded-lg overflow-hidden border border-border-subtle bg-[rgba(8,8,10,0.6)]">
+              <NeuralCanvas />
+              <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between z-10">
+                <div className="font-mono text-[11px] text-text-faint flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-accent" style={{ animation: "pulse-dot 2s ease-in-out infinite" }} />
+                  <ActivityTicker />
+                </div>
               </div>
             </div>
           </div>
