@@ -117,7 +117,6 @@ const FILTERS: { label: string; value: FilterCategory }[] = [
   { label: "AI & Agents", value: "ai" },
   { label: "Web3", value: "web3" },
   { label: "Blockchain", value: "blockchain" },
-  { label: "Technology", value: "tech" },
 ];
 
 const CATEGORY_STYLES: Record<string, string> = {
@@ -309,7 +308,7 @@ export default function Manuscripts() {
           {filtered.map((m) => (
             <article
               key={m.id}
-              className="bg-surface-2 border border-border-subtle rounded-xl p-6 flex flex-col hover:border-border hover:-translate-y-0.5 hover:shadow-[0_0_40px_rgba(249,115,22,0.08)] transition-all fade-in-section"
+              className="bg-surface-2 border border-border-subtle rounded-xl p-6 flex flex-col hover:border-border hover:-translate-y-0.5 hover:shadow-[0_0_40px_rgba(249,115,22,0.08)] transition-all"
             >
               {/* Top bar: category + confidence */}
               <div className="flex items-center justify-between gap-3 mb-3">

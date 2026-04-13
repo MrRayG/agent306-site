@@ -2,6 +2,15 @@
 
 import { useState } from "react";
 
+const NAV_ITEMS = [
+  { label: "Triad", id: "triad" },
+  { label: "Knowledge", id: "pulse" },
+  { label: "THE SIGNAL", id: "signal" },
+  { label: "Blog", id: "blog" },
+  { label: "Manuscripts", id: "manuscripts" },
+  { label: "Feeds", id: "feeds" },
+];
+
 export default function HeaderV2() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -24,13 +33,7 @@ export default function HeaderV2() {
         {/* Desktop Nav */}
         <nav className="hidden md:block">
           <ul className="flex items-center gap-8 list-none">
-            {[
-              { label: "Triad", id: "triad" },
-              { label: "Knowledge", id: "pulse" },
-              { label: "THE SIGNAL", id: "signal" },
-              { label: "Manuscripts", id: "manuscripts" },
-              { label: "Feeds", id: "feeds" },
-            ].map((item) => (
+            {NAV_ITEMS.map((item) => (
               <li key={item.id}>
                 <button
                   onClick={() => scrollTo(item.id)}
@@ -76,14 +79,7 @@ export default function HeaderV2() {
       {/* Mobile nav overlay */}
       {mobileOpen && (
         <div className="fixed top-16 left-0 right-0 bottom-0 bg-[rgba(8,8,10,0.97)] backdrop-blur-xl z-[99] p-8 px-4 md:hidden">
-          {[
-            { label: "Triad", id: "triad" },
-            { label: "Knowledge", id: "pulse" },
-            { label: "THE SIGNAL", id: "signal" },
-            { label: "Manuscripts", id: "manuscripts" },
-            { label: "Feeds", id: "feeds" },
-            { label: "Research", id: "breakthroughs" },
-          ].map((item) => (
+          {NAV_ITEMS.map((item) => (
             <button
               key={item.id}
               onClick={() => scrollTo(item.id)}
