@@ -1,13 +1,12 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { BlogPost } from "@/lib/types";
 
 interface ContentSectionProps {
   posts: BlogPost[];
 }
-
-const BLOG_BASE = "https://agent306-dashboard-production.up.railway.app";
 
 export default function ContentSection({ posts }: ContentSectionProps) {
   return (
@@ -66,11 +65,9 @@ export default function ContentSection({ posts }: ContentSectionProps) {
         {/* Blog / Episode cards — clickable */}
         <div id="blog" className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {posts.slice(0, 3).map((post) => (
-            <a
+            <Link
               key={post.id}
-              href={`${BLOG_BASE}/blog/${post.slug}`}
-              target="_blank"
-              rel="noopener noreferrer"
+              href={`/blog/${post.slug}`}
               className="bg-surface border border-border-subtle rounded-xl p-6 flex flex-col hover:border-border hover:-translate-y-0.5 hover:shadow-[0_0_40px_rgba(249,115,22,0.08)] transition-all no-underline group"
             >
               <div className="flex items-center gap-3 mb-3 font-mono text-xs text-text-faint">
@@ -108,7 +105,7 @@ export default function ContentSection({ posts }: ContentSectionProps) {
                   </svg>
                 </span>
               </div>
-            </a>
+            </Link>
           ))}
         </div>
       </div>
