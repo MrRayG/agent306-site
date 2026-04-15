@@ -88,9 +88,9 @@ export default function Home() {
   }, []);
 
   // Intersection observer for fade-in sections
-  // Re-run when evalBenchmark loads so conditionally-rendered sections get observed
+  // Uses MutationObserver to pick up conditionally-rendered sections (e.g. 306Eval)
   useEffect(() => {
-    const observer = new IntersectionObserver(
+    const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
@@ -101,12 +101,23 @@ export default function Home() {
       { threshold: 0.05, rootMargin: "0px 0px -30px 0px" }
     );
 
-    document.querySelectorAll(".fade-in-section").forEach((el) => {
-      observer.observe(el);
-    });
+    // Observe all current fade-in sections
+    const observeAll = () => {
+      document.querySelectorAll(".fade-in-section:not(.visible)").forEach((el) => {
+        io.observe(el);
+      });
+    };
+    observeAll();
 
-    return () => observer.disconnect();
-  }, [evalBenchmark]);
+    // Watch for new sections added to the DOM (conditional renders)
+    const mo = new MutationObserver(() => observeAll());
+    mo.observe(document.body, { childList: true, subtree: true });
+
+    return () => {
+      io.disconnect();
+      mo.disconnect();
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-bg relative">
