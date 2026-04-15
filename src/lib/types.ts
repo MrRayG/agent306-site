@@ -116,6 +116,25 @@ export interface DashboardData {
   cognitiveState: CognitiveState;
 }
 
+// ---- 306Eval ----
+
+export interface EvalDimension {
+  name: string;
+  key: string;
+  agent: "Researcher" | "Reasoner" | "Writer";
+  score: number;
+  trend: "up" | "down" | "steady";
+  narrative: string;
+}
+
+export interface EvalBenchmark {
+  composite: number;
+  drift: "improving" | "declining" | "stable";
+  dimensions: EvalDimension[];
+  calibrationDirective: string;
+  weakestDimension: string;
+}
+
 // ---- Blog ----
 
 export interface BlogPost {

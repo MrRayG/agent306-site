@@ -5,6 +5,7 @@ import HeaderV2 from "@/components/HeaderV2";
 import HeroV2 from "@/components/HeroV2";
 import TriadPipeline from "@/components/TriadPipeline";
 import KnowledgePulse from "@/components/KnowledgePulse";
+import EvalBenchmark from "@/components/EvalBenchmark";
 import ContentSection from "@/components/ContentSection";
 import Manuscripts from "@/components/Manuscripts";
 import LiveFeeds from "@/components/LiveFeeds";
@@ -15,11 +16,13 @@ import {
   fetchBlogPosts,
   getInitialData,
 } from "@/lib/api";
+import type { LiveResult } from "@/lib/api";
 import type {
   AgentState,
   ActivityItem,
   ResearchStats,
   CognitiveState as CognitiveStateType,
+  EvalBenchmark as EvalBenchmarkType,
   BlogPost,
 } from "@/lib/types";
 import type { DevGoal } from "@/lib/types";
@@ -32,6 +35,7 @@ export default function Home() {
   const [, setGoals] = useState<DevGoal[]>(initial.goals);
   const [research, setResearch] = useState<ResearchStats>(initial.research);
   const [cognitiveState, setCognitiveState] = useState<CognitiveStateType>(initial.cognitiveState);
+  const [evalBenchmark, setEvalBenchmark] = useState<LiveResult<EvalBenchmarkType> | null>(null);
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
 
   const hasLive = useRef({
@@ -40,6 +44,7 @@ export default function Home() {
     goals: false,
     research: false,
     cognitiveState: false,
+    evalBenchmark: false,
   });
 
   const loadData = useCallback(async () => {
@@ -64,6 +69,10 @@ export default function Home() {
     if (result.cognitiveState.isLive || !hasLive.current.cognitiveState) {
       setCognitiveState(result.cognitiveState.data);
       if (result.cognitiveState.isLive) hasLive.current.cognitiveState = true;
+    }
+    if (result.evalBenchmark.isLive || !hasLive.current.evalBenchmark) {
+      setEvalBenchmark(result.evalBenchmark);
+      if (result.evalBenchmark.isLive) hasLive.current.evalBenchmark = true;
     }
   }, []);
 
@@ -125,6 +134,13 @@ export default function Home() {
         <div className="fade-in-section">
           <KnowledgePulse data={cognitiveState} />
         </div>
+
+        {/* 306Eval Growth Story */}
+        {evalBenchmark && (
+          <div className="fade-in-section">
+            <EvalBenchmark data={evalBenchmark} />
+          </div>
+        )}
 
         {/* THE SIGNAL podcast */}
         <div className="fade-in-section">

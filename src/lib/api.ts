@@ -14,6 +14,7 @@ import {
   CognitiveState,
   DashboardData,
   BlogPost,
+  EvalBenchmark,
 } from "./types";
 
 const API_BASE = "https://agent306-dashboard-production.up.railway.app";
@@ -278,6 +279,21 @@ const mockCognitiveState: CognitiveState = {
   generatedAt: new Date().toISOString(),
 };
 
+const mockEvalBenchmark: EvalBenchmark = {
+  composite: 52,
+  drift: "stable",
+  dimensions: [
+    { name: "Signal Acquisition", key: "signalAcquisition", agent: "Researcher", score: 55, trend: "up", narrative: "Gaining momentum — research pipeline hitting stride" },
+    { name: "Source Integrity", key: "sourceIntegrity", agent: "Researcher", score: 50, trend: "steady", narrative: "Building foundation — building contradiction resolution habits" },
+    { name: "Reasoning Rigor", key: "reasoningRigor", agent: "Reasoner", score: 58, trend: "up", narrative: "Gaining momentum — debates producing solid consensus" },
+    { name: "Intellectual Honesty", key: "intellectualHonesty", agent: "Reasoner", score: 45, trend: "steady", narrative: "Building foundation — building correction reflexes" },
+    { name: "Voice Evolution", key: "voiceEvolution", agent: "Writer", score: 48, trend: "up", narrative: "Building foundation — style patterns emerging" },
+    { name: "Audience Impact", key: "audienceImpact", agent: "Writer", score: 42, trend: "steady", narrative: "Building foundation — early engagement signals" },
+  ],
+  calibrationDirective: "Audience engagement is softening — analyze what recent high-performers had in common.",
+  weakestDimension: "audienceImpact",
+};
+
 // ---- Icon mapping for activity types ----
 
 const ACTIVITY_ICONS: Record<string, string> = {
@@ -456,6 +472,12 @@ export async function fetchCognitiveState(): Promise<LiveResult<CognitiveState>>
   };
 }
 
+export async function fetchEvalBenchmark(): Promise<LiveResult<EvalBenchmark>> {
+  const { data, isLive } = await fetchPublic<{ benchmark: EvalBenchmark }>("/api/public/eval", { benchmark: mockEvalBenchmark });
+  if (!isLive || !data.benchmark) return { data: mockEvalBenchmark, isLive: false };
+  return { data: data.benchmark, isLive: true };
+}
+
 export interface LiveDashboardData {
   agentState: LiveResult<AgentState>;
   progressBars: LiveResult<ProgressBars>;
@@ -463,10 +485,11 @@ export interface LiveDashboardData {
   goals: LiveResult<DevGoal[]>;
   research: LiveResult<ResearchStats>;
   cognitiveState: LiveResult<CognitiveState>;
+  evalBenchmark: LiveResult<EvalBenchmark>;
 }
 
 export async function fetchAllDashboardData(): Promise<LiveDashboardData> {
-  const [agentState, progressBars, activityFeed, goals, research, cognitiveState] =
+  const [agentState, progressBars, activityFeed, goals, research, cognitiveState, evalBenchmark] =
     await Promise.all([
       fetchAgentState(),
       fetchProgressBars(),
@@ -474,9 +497,10 @@ export async function fetchAllDashboardData(): Promise<LiveDashboardData> {
       fetchGoals(),
       fetchResearch(),
       fetchCognitiveState(),
+      fetchEvalBenchmark(),
     ]);
 
-  return { agentState, progressBars, activityFeed, goals, research, cognitiveState };
+  return { agentState, progressBars, activityFeed, goals, research, cognitiveState, evalBenchmark };
 }
 
 // ---- Synchronous initial data (for SSR/immediate render) ----
