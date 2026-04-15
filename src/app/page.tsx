@@ -88,6 +88,7 @@ export default function Home() {
   }, []);
 
   // Intersection observer for fade-in sections
+  // Re-run when evalBenchmark loads so conditionally-rendered sections get observed
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -105,7 +106,7 @@ export default function Home() {
     });
 
     return () => observer.disconnect();
-  }, []);
+  }, [evalBenchmark]);
 
   return (
     <div className="min-h-screen bg-bg relative">
