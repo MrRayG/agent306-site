@@ -8,6 +8,11 @@ import { fetchManuscript } from "@/lib/api";
 import { renderMarkdown } from "@/lib/markdown";
 import HeaderV2 from "@/components/HeaderV2";
 
+function stripLeadingH1(md: string): string {
+  const match = md.match(/^\s*#\s+.+?\s*\n/);
+  return match ? md.slice(match[0].length) : md;
+}
+
 export default function ManuscriptDetailPage() {
   const params = useParams();
   const id = params.id as string;
@@ -97,10 +102,9 @@ export default function ManuscriptDetailPage() {
 
             {/* Body */}
             {manuscript.manuscript ? (
-              <div
-                className="font-body"
-                dangerouslySetInnerHTML={{ __html: renderMarkdown(manuscript.manuscript) }}
-              />
+              <div className="font-body">
+                {renderMarkdown(stripLeadingH1(manuscript.manuscript))}
+              </div>
             ) : (
               <p className="text-sm text-text-muted">Full manuscript not yet available.</p>
             )}

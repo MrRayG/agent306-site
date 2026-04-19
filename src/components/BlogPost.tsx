@@ -4,7 +4,7 @@ import { renderMarkdown } from "@/lib/markdown";
 // ---- Component ----
 
 export default function BlogPostContent({ post }: { post: BlogPost }) {
-  const html = renderMarkdown(post.content);
+  const body = stripLeadingH1(post.content, post.title);
 
   return (
     <article className="max-w-3xl mx-auto">
@@ -45,10 +45,14 @@ export default function BlogPostContent({ post }: { post: BlogPost }) {
       </div>
 
       {/* Content */}
-      <div
-        className="font-body"
-        dangerouslySetInnerHTML={{ __html: html }}
-      />
+      <div className="font-body">{renderMarkdown(body)}</div>
     </article>
   );
+}
+
+function stripLeadingH1(md: string, title?: string): string {
+  const match = md.match(/^\s*#\s+(.+?)\s*\n/);
+  if (!match) return md;
+  if (title && match[1].trim() !== title.trim()) return md;
+  return md.slice(match[0].length);
 }
