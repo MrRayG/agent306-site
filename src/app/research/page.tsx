@@ -1,15 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState, useDeferredValue } from "react";
 import Link from "next/link";
 import { Manuscript } from "@/lib/types";
 import { fetchManuscripts } from "@/lib/api";
 import HeaderV2 from "@/components/HeaderV2";
 import ManuscriptCard from "@/components/ManuscriptCard";
+import ResearchFilters from "@/components/ResearchFilters";
+
+const UNCATEGORIZED = "__uncategorized__";
 
 export default function ResearchPage() {
   const [manuscripts, setManuscripts] = useState<Manuscript[]>([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const [typeFilter, setTypeFilter] = useState("");
+
+  const deferredSearch = useDeferredValue(search);
 
   useEffect(() => {
     fetchManuscripts().then((result) => {
@@ -17,6 +24,40 @@ export default function ResearchPage() {
       setLoading(false);
     });
   }, []);
+
+  const availableTypes = useMemo(() => {
+    const set = new Set<string>();
+    for (const m of manuscripts) {
+      set.add(m.manuscriptType && m.manuscriptType.trim() ? m.manuscriptType : UNCATEGORIZED);
+    }
+    return Array.from(set).sort((a, b) => {
+      if (a === UNCATEGORIZED) return 1;
+      if (b === UNCATEGORIZED) return -1;
+      return a.localeCompare(b);
+    });
+  }, [manuscripts]);
+
+  const filtered = useMemo(() => {
+    const q = deferredSearch.trim().toLowerCase();
+    return manuscripts.filter((m) => {
+      if (typeFilter) {
+        const t = m.manuscriptType && m.manuscriptType.trim() ? m.manuscriptType : UNCATEGORIZED;
+        if (t !== typeFilter) return false;
+      }
+      if (q) {
+        const hay = `${m.title ?? ""} ${m.excerpt ?? ""}`.toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      return true;
+    });
+  }, [manuscripts, deferredSearch, typeFilter]);
+
+  const hasFilters = search.trim().length > 0 || typeFilter.length > 0;
+
+  const clearFilters = () => {
+    setSearch("");
+    setTypeFilter("");
+  };
 
   return (
     <div className="min-h-screen bg-bg relative">
@@ -56,11 +97,40 @@ export default function ResearchPage() {
             <p className="text-text-muted text-sm">No manuscripts yet. Check back soon.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {manuscripts.map((m) => (
-              <ManuscriptCard key={m.id} m={m} />
-            ))}
-          </div>
+          <>
+            <ResearchFilters
+              searchValue={search}
+              onSearchChange={setSearch}
+              typeValue={typeFilter}
+              onTypeChange={setTypeFilter}
+              availableTypes={availableTypes}
+            />
+
+            {hasFilters && (
+              <p className="text-xs text-text-muted font-mono mb-4">
+                Showing {filtered.length} of {manuscripts.length} manuscripts
+              </p>
+            )}
+
+            {filtered.length === 0 ? (
+              <div className="text-center py-20">
+                <p className="text-text-muted text-sm mb-4">No manuscripts match these filters.</p>
+                <button
+                  type="button"
+                  onClick={clearFilters}
+                  className="inline-flex items-center gap-1 text-xs text-accent hover:underline font-mono uppercase tracking-wider"
+                >
+                  Clear filters
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filtered.map((m) => (
+                  <ManuscriptCard key={m.id} m={m} />
+                ))}
+              </div>
+            )}
+          </>
         )}
       </main>
     </div>
