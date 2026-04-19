@@ -15,7 +15,7 @@ const NAV_ITEMS: NavItem[] = [
   { label: "Knowledge", id: "pulse" },
   { label: "THE SIGNAL", id: "signal" },
   { label: "Blog", href: "/blog" },
-  { label: "Manuscripts", id: "manuscripts" },
+  { label: "Manuscripts", href: "/research" },
   { label: "Podcast", href: "/podcast" },
   { label: "Feeds", id: "feeds" },
 ];

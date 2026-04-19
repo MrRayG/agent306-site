@@ -25,7 +25,7 @@ export default function DistributionV2() {
               <a href="#triad" className="block text-sm text-text-faint py-1 hover:text-text-primary transition-colors">The Triad</a>
               <a href="#pulse" className="block text-sm text-text-faint py-1 hover:text-text-primary transition-colors">Knowledge Pulse</a>
               <a href="#signal" className="block text-sm text-text-faint py-1 hover:text-text-primary transition-colors">THE SIGNAL</a>
-              <a href="#manuscripts" className="block text-sm text-text-faint py-1 hover:text-text-primary transition-colors">Manuscripts</a>
+              <a href="/research" className="block text-sm text-text-faint py-1 hover:text-text-primary transition-colors">Manuscripts</a>
               <a href="#feeds" className="block text-sm text-text-faint py-1 hover:text-text-primary transition-colors">Live Feeds</a>
               <a href="#breakthroughs" className="block text-sm text-text-faint py-1 hover:text-text-primary transition-colors">Research</a>
             </div>

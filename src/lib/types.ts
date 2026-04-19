@@ -135,6 +135,18 @@ export interface EvalBenchmark {
   weakestDimension: string;
 }
 
+// ---- Research Manuscripts ----
+
+export interface Manuscript {
+  id: string;
+  title: string;
+  publishedAt: string;
+  excerpt: string;
+  manuscriptType?: string;
+  publishedTo?: string[];
+  manuscript?: string;
+}
+
 // ---- Blog ----
 
 export interface BlogPost {

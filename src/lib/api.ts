@@ -15,6 +15,7 @@ import {
   DashboardData,
   BlogPost,
   EvalBenchmark,
+  Manuscript,
 } from "./types";
 
 const API_BASE = "https://agent306-dashboard-production.up.railway.app";
@@ -571,6 +572,62 @@ export async function fetchBlogPost(slug: string): Promise<LiveResult<BlogPost |
   const { data, isLive } = await fetchPublic<BlogPost>(`/api/public/blog/posts/${slug}`, {} as BlogPost);
   if (!isLive || !data.title) {
     const mock = mockBlogPosts.find((p) => p.slug === slug) ?? null;
+    return { data: mock, isLive: false };
+  }
+  return { data, isLive: true };
+}
+
+// ---- Research Manuscripts API ----
+
+const mockManuscripts: Manuscript[] = [
+  {
+    id: "mock-m1",
+    title: "The Liability Vacuum: Who Pays When AI Agents Lose Your Money?",
+    publishedAt: new Date(Date.now() - 86400000 * 2).toISOString(),
+    excerpt: "A comprehensive analysis of the legal framework gaps exposed by Public's agentic brokerage launch. Maps current liability structures across securities law, tort law, and emerging AI regulation.",
+    manuscriptType: "AI & Agents",
+    publishedTo: ["research"],
+  },
+  {
+    id: "mock-m2",
+    title: "On-Chain AI Agent Burn Mechanics: Deflationary Incentive Alignment",
+    publishedAt: new Date(Date.now() - 86400000 * 3).toISOString(),
+    excerpt: "Investigation into tokenized AI agents using programmatic burn mechanisms to create deflationary pressure. Analyzes three live protocols.",
+    manuscriptType: "Blockchain",
+    publishedTo: ["research"],
+  },
+  {
+    id: "mock-m3",
+    title: "Vibe Coding: When Velocity Outpaces Reliability",
+    publishedAt: new Date(Date.now() - 86400000 * 4).toISOString(),
+    excerpt: "Explores the tension between \"vibe coding\" tools that prioritize speed over correctness and the enterprise environments that demand both.",
+    manuscriptType: "Web3 Culture",
+    publishedTo: ["research"],
+  },
+  {
+    id: "mock-m4",
+    title: "The Persuasion Architecture: How AI Systems Learn to Change Minds",
+    publishedAt: new Date(Date.now() - 86400000 * 5).toISOString(),
+    excerpt: "Deep investigation into emerging persuasion patterns across conversational AI systems. Documents three distinct manipulation vectors.",
+    manuscriptType: "AI Safety",
+    publishedTo: ["research"],
+  },
+];
+
+export async function fetchManuscripts(limit?: number): Promise<LiveResult<Manuscript[]>> {
+  const path = limit ? `/api/public/research/manuscripts?limit=${limit}` : "/api/public/research/manuscripts";
+  const { data, isLive } = await fetchPublic<{ manuscripts: Manuscript[] }>(path, { manuscripts: [] });
+  if (!isLive || !data.manuscripts || data.manuscripts.length === 0) {
+    const fallback = limit ? mockManuscripts.slice(0, limit) : mockManuscripts;
+    return { data: fallback, isLive: false };
+  }
+  return { data: data.manuscripts, isLive: true };
+}
+
+export async function fetchManuscript(id: string): Promise<LiveResult<Manuscript | null>> {
+  const { data, isLive } = await fetchPublic<Manuscript>(`/api/public/research/manuscripts/${id}`, {} as Manuscript);
+  if (!isLive || !data.title) {
+    const mock = mockManuscripts.find((m) => m.id === id) ?? null;
     return { data: mock, isLive: false };
   }
   return { data, isLive: true };
