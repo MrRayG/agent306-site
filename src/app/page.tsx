@@ -171,7 +171,7 @@ export default function Home() {
 
         {/* Recent Breakthroughs */}
         <div className="fade-in-section">
-          <Breakthroughs research={research} />
+          <Breakthroughs />
         </div>
       </main>
 
